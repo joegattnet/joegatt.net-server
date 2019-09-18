@@ -1,0 +1,97 @@
+# https://gist.github.com/gitaarik/8735255
+# https://github.com/nicholaskajoh/jack
+# https://github.com/nicholaskajoh/jack/blob/master/docker-compose.prod.yml
+# https://stackoverflow.com/questions/34120504/how-can-i-make-docker-compose-build-an-image-from-a-remote-git-repository
+# https://github.com/alexisrolland/docker-postgresql-postgraphile
+# https://medium.com/mobileforgood/coding-tips-patterns-for-continuous-integration-with-docker-on-travis-ci-9cedb8348a62
+# https://medium.com/coderbunker/a-better-way-to-develop-your-graphql-api-using-docker-postgresql-postgraphile-7a1ae034b826
+# https://stackoverflow.com/questions/36781984/load-postgres-dump-after-docker-compose-up
+# https://hub.docker.com/_/postgres/
+# https://hackernoon.com/dockerizing-an-existing-rails-postgresql-app-with-docker-compose-a30a7e1b3f40
+
+version: "3"
+
+services:
+  reverse-proxy:
+    image: traefik # The official Traefik docker image
+    command: --api --docker # Enables the web UI and tells Traefik to listen to docker
+    ports:
+      - "80:80" # The HTTP port
+      - "8080:8080" # The Web UI (enabled by --api)
+      - "443:443" # Secure port
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+
+  db:
+    container_name: psql
+    restart: always
+    image: psql
+    build:
+      context: ./joegatt.net-db
+    volumes:
+      - ./db/data/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DEV_DB_PASSWORD}
+      POSTGRES_DB: joegattnet
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+  #   networks:
+  #     - psql-pgql
+  #
+  # graphql:
+  #   container_name: pgql
+  #   restart: always
+  #   image: graphile/postgraphile
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:${DEV_DB_PASSWORD}@db:5432/joegattnet
+  #     JWT_SECRET: kemmtridbombi
+  #   expose:
+  #     - 5000
+  #   ports:
+  #     - 5000:5000
+  #   command: [
+  #       "postgraphile",
+  #       "-w",
+  #       "--cors",
+  #       "-c",
+  #       "postgres://postgres:${DEV_DB_PASSWORD}@db:5432/joegattnet",
+  #       "-s",
+  #       "api",
+  #       "--extended-errors",
+  #       "hint,detail,errcode",
+  #       "--jwt-secret",
+  #       "${DEV_JWT_SECRET}",
+  #       "--token",
+  #       "api.jwt_token",
+  #       "--default-role",
+  #       "unregistered",
+  #     ]
+  #   links:
+  #     - db
+  #   networks:
+  #     - psql-pgql
+
+  # nembrotcom:
+  #   build: ./nembrot.com
+  #   volumes:
+  #     - ./nembrot.com:/usr/share/nginx/html
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.backend=nembrotcom-be"
+  #     - "traefik.frontend.rule=Host:nembrotcom.localhost"
+
+  v3joegattnet:
+    build: ./joegatt.net-v3-html
+    volumes:
+      - ./v3.joegatt.net:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=v3joegattnet-be"
+      - "traefik.frontend.rule=Host:v3joegattnet.localhost"
+# networks:
+#   psql-pgql:
