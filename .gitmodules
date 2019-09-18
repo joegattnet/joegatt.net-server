@@ -1,0 +1,12 @@
+[submodule "joegatt.net-db"]
+	path = joegatt.net-db
+	url = git@github.com:joegattnet/joegatt.net-db
+[submodule "joegatt.net-backend"]
+	path = joegatt.net-backend
+	url = git@github.com:joegattnet/joegatt.net-backend
+[submodule "joegatt.net-frontend"]
+	path = joegatt.net-frontend
+	url = git@github.com:joegattnet/joegatt.net-frontend
+[submodule "joegatt.net-v3-html"]
+	path = joegatt.net-v3-html
+	url = git@github.com:joegattnet/joegatt.net-v3-html.git
