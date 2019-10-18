@@ -8,6 +8,7 @@
 # https://stackoverflow.com/questions/36781984/load-postgres-dump-after-docker-compose-up
 # https://hub.docker.com/_/postgres/
 # https://hackernoon.com/dockerizing-an-existing-rails-postgresql-app-with-docker-compose-a30a7e1b3f40
+# https://medium.com/@beld_pro/quick-tip-creating-a-postgresql-container-with-default-user-and-password-8bb2adb82342
 
 version: "3"
 
@@ -15,7 +16,7 @@ services:
   reverse-proxy:
     container_name: traefik
     image: traefik # The official Traefik docker image
-    command: --api --docker # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker # Enables the web UI and tells Traefik to listen to docker
     ports:
       - "80:80" # The HTTP port
       - "8080:8080" # The Web UI (enabled by --api)
@@ -32,7 +33,7 @@ services:
     volumes:
       - ./joegatt.net-db/data/:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: deployer
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DEV_DB_PASSWORD}
       POSTGRES_DB: joegattnet
     expose:
@@ -41,42 +42,59 @@ services:
       - 5432
     networks:
       - psql-pgql
+      - postgres
 
-  graphql:
-    container_name: postgraphile
-    restart: always
-    image: graphile/postgraphile
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://deployer:${DEV_DB_PASSWORD}@db:5432/joegattnet
-      JWT_SECRET: $DEV_JWT_SECRET
-    expose:
-      - 5000
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+       - ./joegatt.net-db/data/
     ports:
-      - 5000
-    command:
-      [
-        "postgraphile",
-        "-w",
-        "--cors",
-        "-c",
-        $DATABASE_URL,
-        "-s",
-        "api",
-        "--extended-errors",
-        "hint,detail,errcode",
-        "--jwt-secret",
-        $DEV_JWT_SECRET,
-        "--token",
-        "api.jwt_token",
-        "--default-role",
-        "unregistered",
-      ]
-    links:
-      - db
+      - "${PGADMIN_PORT:-5050}:80"
     networks:
-      - psql-pgql
+      - postgres
+    restart: unless-stopped
+
+  # graphql:
+  #   container_name: postgraphile
+  #   restart: always
+  #   image: graphile/postgraphile
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:${DEV_DB_PASSWORD}@db:5432/joegattnet
+  #     JWT_SECRET: $DEV_JWT_SECRET
+  #   expose:
+  #     - 5000
+  #   ports:
+  #     - 5000
+  #   command:
+  #     [
+  #       "postgraphile",
+  #       "-w",
+  #       "--cors",
+  #       "-c",
+  #       "postgres://postgres:${DEV_DB_PASSWORD}@db:5432/joegattnet",
+  #       "-s",
+  #       "api",
+  #       "--extended-errors",
+  #       "hint,detail,errcode",
+  #       "--jwt-secret",
+  #       $DEV_JWT_SECRET,
+  #       "--token",
+  #       "api.jwt_token",
+  #       "--default-role",
+  #       "unregistered",
+  #     ]
+  #   links:
+  #     - db
+  #   networks:
+  #     - psql-pgql
 
   # nembrotcom:
   #   build: ./nembrot.com
@@ -101,3 +119,9 @@ services:
 
 networks:
   psql-pgql:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
