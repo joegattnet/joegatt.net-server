@@ -16,7 +16,9 @@ services:
   reverse-proxy:
     container_name: traefik
     image: traefik # The official Traefik docker image
-    command: --api.insecure=true --providers.docker # Enables the web UI and tells Traefik to listen to docker
+    command:
+      - "--api=true"
+      - "--docker=true"
     ports:
       - "80:80" # The HTTP port
       - "8080:8080" # The Web UI (enabled by --api)
@@ -33,9 +35,9 @@ services:
     volumes:
       - ./joegatt.net-db/data/:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DEV_DB_PASSWORD}
-      POSTGRES_DB: joegattnet
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     expose:
       - 5432
     ports:
@@ -50,10 +52,11 @@ services:
     depends_on:
       - db
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     volumes:
-       - ./joegatt.net-db/data/
+      # - ./joegatt.net-db/data/
+      - pgadmin:/root/.pgadmin
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
