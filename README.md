@@ -17,3 +17,9 @@ This repository includes submodules for several applications. To clone the entir
     git submodule update --remote
 
     git submodule foreach 'git reset --hard'
+
+## dashboard
+
+    ```docker-compose up
+
+    Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.

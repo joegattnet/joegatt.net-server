@@ -10,7 +10,7 @@
 # https://hackernoon.com/dockerizing-an-existing-rails-postgresql-app-with-docker-compose-a30a7e1b3f40
 # https://medium.com/@beld_pro/quick-tip-creating-a-postgresql-container-with-default-user-and-password-8bb2adb82342
 
-version: "3"
+version: "3.3"
 
 services:
   reverse-proxy:
@@ -26,18 +26,18 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
 
-  db:
-    container_name: db
+  postgres:
+    container_name: postgres_container
     restart: always
-    image: psql
+    image: postgres:10.4-alpine
     build:
       context: ./joegatt.net-db
     volumes:
-      - ./joegatt.net-db/data/:/var/lib/postgresql/data
+      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
     expose:
       - 5432
     ports:
@@ -47,15 +47,14 @@ services:
       - postgres
 
   pgadmin:
-    container_name: pgadmin
+    container_name: pgadmin_container
     image: dpage/pgadmin4
     depends_on:
-      - db
+      - postgres
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     volumes:
-      # - ./joegatt.net-db/data/
       - pgadmin:/root/.pgadmin
     ports:
       - "${PGADMIN_PORT:-5050}:80"
@@ -63,68 +62,102 @@ services:
       - postgres
     restart: unless-stopped
 
-  # graphql:
-  #   container_name: postgraphile
-  #   restart: always
-  #   image: graphile/postgraphile
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     DATABASE_URL: postgres://postgres:${DEV_DB_PASSWORD}@db:5432/joegattnet
-  #     JWT_SECRET: $DEV_JWT_SECRET
-  #   expose:
-  #     - 5000
-  #   ports:
-  #     - 5000
-  #   command:
-  #     [
-  #       "postgraphile",
-  #       "-w",
-  #       "--cors",
-  #       "-c",
-  #       "postgres://postgres:${DEV_DB_PASSWORD}@db:5432/joegattnet",
-  #       "-s",
-  #       "api",
-  #       "--extended-errors",
-  #       "hint,detail,errcode",
-  #       "--jwt-secret",
-  #       $DEV_JWT_SECRET,
-  #       "--token",
-  #       "api.jwt_token",
-  #       "--default-role",
-  #       "unregistered",
-  #     ]
-  #   links:
-  #     - db
-  #   networks:
-  #     - psql-pgql
-
-  # nembrotcom:
-  #   build: ./nembrot.com
-  #   volumes:
-  #     - ./nembrot.com:/usr/share/nginx/html
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.backend=nembrotcom-be"
-  #     - "traefik.frontend.rule=Host:nembrotcom.localhost"
+  graphql:
+    container_name: forum-example-graphql
+    restart: always
+    image: forum-example-graphql
+    # env_file:
+    #   - ./.env
+    environment:
+      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
+      PORT: 5432
+    depends_on:
+      - postgres
+    networks:
+      - psql-pgql
+    ports:
+      - 5433
+    expose:
+      - 5433
+    command:
+      [
+        "-w",
+        "--cors",
+        "-c",
+        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
+        "-s",
+        "api",
+        "--extended-errors",
+        "hint,detail,errcode",
+        "--jwt-secret",
+        $JWT_SECRET,
+        "--token",
+        "api.jwt_token",
+        "--default-role",
+        "unregistered"
+      ]
 
   v3joegattnet:
     container_name: v3.joegatt.net
-    build: ./joegatt.net-v3-html
+    build:
+      context: ./joegatt.net-v3-html
+      dockerfile: Dockerfile
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.backend=v3joegattnet-be"
       - "traefik.frontend.rule=Host:v3joegattnet.localhost"
-    # command:
-    #   - "chown -R ${NGINX_UID}:${NGINX_GID} ./v3.joegatt.net:/usr/share/nginx/html"
+
+  joegattnet:
+    build: ./joegatt.net-frontend
+    volumes:
+      - ./joegatt.net-frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3001
+      - 9229:9229
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+    - 9090:9090
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+    - cadvisor
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 9191:9191
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+    - 6379:6379
 
 networks:
   psql-pgql:
   postgres:
     driver: bridge
-
+  app-network:
+    driver: bridge
+  
 volumes:
   postgres:
   pgadmin:
