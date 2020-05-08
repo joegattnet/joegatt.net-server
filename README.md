@@ -20,6 +20,6 @@ This repository includes submodules for several applications. To clone the entir
 
 ## dashboard
 
-    ```docker-compose up
+    docker-compose up
 
-    Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.
+Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.
