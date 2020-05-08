@@ -63,9 +63,11 @@ services:
     restart: unless-stopped
 
   graphql:
-    container_name: forum-example-graphql
+    container_name: graphql
     restart: always
     image: forum-example-graphql
+    # build:
+    #   context: ./graphql
     # env_file:
     #   - ./.env
     environment:
