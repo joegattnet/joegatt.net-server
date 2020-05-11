@@ -9,6 +9,7 @@
 # https://hub.docker.com/_/postgres/
 # https://hackernoon.com/dockerizing-an-existing-rails-postgresql-app-with-docker-compose-a30a7e1b3f40
 # https://medium.com/@beld_pro/quick-tip-creating-a-postgresql-container-with-default-user-and-password-8bb2adb82342
+# https://medium.com/@xiaolishen/develop-in-docker-a-node-backend-and-a-react-front-end-talking-to-each-other-5c522156f634
 
 version: "3.3"
 
@@ -25,7 +26,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
 
   postgres:
-    container_name: postgres_container
+    container_name: postgres
     restart: always
     image: postgres:10.4-alpine
     build:
@@ -45,7 +46,7 @@ services:
       - postgres
 
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin
     image: dpage/pgadmin4
     depends_on:
       - postgres
@@ -63,11 +64,7 @@ services:
   graphql:
     container_name: graphql
     restart: always
-    image: forum-example-graphql
-    # build:
-    #   context: ./graphql
-    # env_file:
-    #   - ./.env
+    image: graphile/postgraphile
     environment:
       DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
       PORT: 5432
@@ -99,9 +96,7 @@ services:
 
   v3joegattnet:
     container_name: v3.joegatt.net
-    build:
-      context: ./joegatt.net-v3-html
-      dockerfile: Dockerfile
+    build: ./joegatt.net-v3-html
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
@@ -109,16 +104,20 @@ services:
       - "traefik.backend=v3joegattnet-be"
       - "traefik.frontend.rule=Host:v3joegattnet.localhost"
 
-  joegattnet:
-    build: ./joegatt.net-frontend
+  v4joegattnet:
+    container_name: v4.joegatt.net
+    build:
+      context: ./joegatt.net-frontend
+      dockerfile: Dockerfile
     volumes:
-      - ./joegatt.net-frontend:/usr/src/app
-      - /usr/src/app/node_modules
+      - '.:/usr/src/app'
+      - '/usr/src/app/node_modules'
     ports:
-      - 3001:3001
-      - 9229:9229
-    networks:
-      - app-network
+      - '3001:3001'
+    environment:
+      - NODE_ENV=development
+    # networks:
+    #   - app-network
 
   prometheus:
     image: prom/prometheus:latest

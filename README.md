@@ -18,8 +18,20 @@ This repository includes submodules for several applications. To clone the entir
 
     git submodule foreach 'git reset --hard'
 
-## dashboard
+## Dashboard
 
     docker-compose up
 
 Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.
+
+## To-do
+- ~~Try to use better-sounding image than postgraphile-forum-example~~
+- ~~Remove /graphql (it's not being used)~~
+- Dockerise frontend
+- Fix privileges
+- Get basic design of website up
+- Do hello world node/nodemon
+- Do webhooks
+- Do formattter
+- Do puller
+- Do pusher
