@@ -10,153 +10,203 @@
 # https://hackernoon.com/dockerizing-an-existing-rails-postgresql-app-with-docker-compose-a30a7e1b3f40
 # https://medium.com/@beld_pro/quick-tip-creating-a-postgresql-container-with-default-user-and-password-8bb2adb82342
 # https://medium.com/@xiaolishen/develop-in-docker-a-node-backend-and-a-react-front-end-talking-to-each-other-5c522156f634
+# https://www.digitalocean.com/community/tutorials/how-to-use-traefik-as-a-reverse-proxy-for-docker-containers-on-ubuntu-18-04
 
 version: "3.3"
 
 services:
-  reverse-proxy:
-    container_name: traefik
-    image: traefik:v2.0
-    command: --api.insecure=true --providers.docker
+  traefik:
+    container_name: traefik_container
+    image: traefik:v2.2
+    command: --api.insecure=true --providers.docker --entrypoints.web.address=:80
     ports:
       - "80:80" # The HTTP port
       - "8080:8080" # The Web UI (enabled by --api)
       - "443:443" # Secure port
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
-
-  postgres:
-    container_name: postgres
-    restart: always
-    image: postgres:10.4-alpine
-    build:
-      context: ./joegatt.net-db
-    volumes:
-      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: ${JOEGATTNET_USER}
-      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
-      POSTGRES_DB: ${JOEGATTNET_DB}
-    expose:
-      - 5432
-    ports:
-      - 5432
+    labels:
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
     networks:
-      - psql-pgql
-      - postgres
+      - web
+      
+  # postgres:
+  #   container_name: postgres
+  #   restart: always
+  #   image: postgres:10.4-alpine
+  #   build:
+  #     context: ./joegatt.net-db
+  #   volumes:
+  #     - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+  #   environment:
+  #     POSTGRES_USER: ${JOEGATTNET_USER}
+  #     POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+  #     POSTGRES_DB: ${JOEGATTNET_DB}
+  #   expose:
+  #     - 5432
+  #   ports:
+  #     - 5432
+  #   networks:
+  #     - psql-pgql
+  #     - postgres
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-    volumes:
-      - pgadmin:/root/.pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
+  # pgadmin:
+  #   container_name: pgadmin
+  #   image: dpage/pgadmin4
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+  #   volumes:
+  #     - pgadmin:/root/.pgadmin
+  #   ports:
+  #     - "${PGADMIN_PORT:-5050}:80"
+  #   networks:
+  #     - postgres
+  #   restart: unless-stopped
 
-  graphql:
-    container_name: graphql
-    restart: always
-    image: graphile/postgraphile
-    environment:
-      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
-      PORT: 5432
-    depends_on:
-      - postgres
-    networks:
-      - psql-pgql
-    ports:
-      - 5433
-    expose:
-      - 5433
-    command:
-      [
-        "-w",
-        "--cors",
-        "-c",
-        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
-        "-s",
-        "api",
-        "--extended-errors",
-        "hint,detail,errcode",
-        "--jwt-secret",
-        $JWT_SECRET,
-        "--token",
-        "api.jwt_token",
-        "--default-role",
-        "unregistered"
-      ]
+  # graphql:
+  #   container_name: graphql
+  #   restart: always
+  #   image: graphile/postgraphile
+  #   environment:
+  #     DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
+  #     PORT: 5432
+  #   depends_on:
+  #     - postgres
+  #   labels:
+  #     - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`)"
+  #   networks:
+  #   - psql-pgql
+  #   - web
+  #   ports:
+  #     - 5433
+  #   expose:
+  #     - 5433
+  #   command:
+  #     [
+  #       "-w",
+  #       "--cors",
+  #       "-c",
+  #       "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
+  #       "-s",
+  #       "api",
+  #       "--extended-errors",
+  #       "hint,detail,errcode",
+  #       "--jwt-secret",
+  #       $JWT_SECRET,
+  #       "--token",
+  #       "api.jwt_token",
+  #       "--default-role",
+  #       "unregistered"
+  #     ]
 
   v3joegattnet:
     container_name: v3.joegatt.net
-    build: ./joegatt.net-v3-html
+    build: 
+      context: ./joegatt.net-v3-html
+      dockerfile: Dockerfile
+    ports:
+      - 3006:3006
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
-      - "traefik.enable=true"
-      - "traefik.backend=v3joegattnet-be"
-      - "traefik.frontend.rule=Host:v3joegattnet.localhost"
+      - "traefik.http.routers.v3joegattnet.rule=Host(`v3joegattnet.localhost`)"
+    networks:
+      - web
 
+  cratest:
+    container_name: cratest
+    build: 
+      context: ./cratest
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./cratest:/usr/app/
+      - /usr/app/node_modules
+    labels:
+      - "traefik.http.routers.cratest.rule=Host(`cratest.localhost`)"
+    networks:
+      - web
+
+  # v4joegattnet:
+  #   container_name: v4joegattnet
+  #   build: 
+  #     context: ./joegatt.net-frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3007:3007
+  #   volumes:
+  #     - ./joegatt.net-frontend:/usr/src/app/
+  #     - /usr/src/app/node_modules
+  #   labels:
+  #     - "traefik.http.routers.v4joegattnet.rule=Host(`v4joegattnet.localhost`)"
+  #   networks:
+  #     - web
+    
   v4joegattnet:
     container_name: v4.joegatt.net
     build:
       context: ./joegatt.net-frontend
       dockerfile: Dockerfile
     volumes:
-      - '.:/usr/src/app'
+      # - './joegatt.net-frontend/public:/usr/src/app/public'
+      - './joegatt.net-frontend:/usr/src/app'
       - '/usr/src/app/node_modules'
+      # - './joegatt.net-frontend:/app'
+      # - '/app/node_modules'
     ports:
-      - '3001:3001'
+      - 3007:3007
     environment:
       - NODE_ENV=development
-    # networks:
-    #   - app-network
+      - CHOKIDAR_USEPOLLING=true
+    labels:
+      - "traefik.http.routers.v4joegattnet.rule=Host(`v4joegattnet.localhost`)"
+    networks:
+      - web
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-    - 9090:9090
-    command:
-    - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-    - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-    - cadvisor
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #   - 9090:9090
+  #   command:
+  #   - --config.file=/etc/prometheus/prometheus.yml
+  #   volumes:
+  #   - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   depends_on:
+  #   - cadvisor
 
-  cadvisor:
-    image: google/cadvisor:latest
-    container_name: cadvisor
-    ports:
-    - 9191:9191
-    volumes:
-    - /:/rootfs:ro
-    - /var/run:/var/run:rw
-    - /sys:/sys:ro
-    - /var/lib/docker/:/var/lib/docker:ro
-    depends_on:
-    - redis
+  # cadvisor:
+  #   image: google/cadvisor:latest
+  #   container_name: cadvisor
+  #   ports:
+  #   - 9191:9191
+  #   volumes:
+  #   - /:/rootfs:ro
+  #   - /var/run:/var/run:rw
+  #   - /sys:/sys:ro
+  #   - /var/lib/docker/:/var/lib/docker:ro
+  #   depends_on:
+  #   - redis
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-    - 6379:6379
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #   - 6379:6379
 
 networks:
-  psql-pgql:
-  postgres:
-    driver: bridge
-  app-network:
-    driver: bridge
-  
+  # psql-pgql:
+  # postgres:
+  #   driver: bridge
+  web:
+
 volumes:
   postgres:
   pgadmin:
