@@ -30,25 +30,25 @@ services:
     networks:
       - web
       
-  # postgres:
-  #   container_name: postgres
-  #   restart: always
-  #   image: postgres:10.4-alpine
-  #   build:
-  #     context: ./joegatt.net-db
-  #   volumes:
-  #     - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
-  #   environment:
-  #     POSTGRES_USER: ${JOEGATTNET_USER}
-  #     POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
-  #     POSTGRES_DB: ${JOEGATTNET_DB}
-  #   expose:
-  #     - 5432
-  #   ports:
-  #     - 5432
-  #   networks:
-  #     - psql-pgql
-  #     - postgres
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.4-alpine
+    build:
+      context: ./joegatt.net-db
+    volumes:
+      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
+    expose:
+      - 5432
+    ports:
+      - 5432
+    networks:
+      - psql-pgql
+      - postgres
 
   # pgadmin:
   #   container_name: pgadmin
@@ -66,41 +66,39 @@ services:
   #     - postgres
   #   restart: unless-stopped
 
-  # graphql:
-  #   container_name: graphql
-  #   restart: always
-  #   image: graphile/postgraphile
-  #   environment:
-  #     DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
-  #     PORT: 5432
-  #   depends_on:
-  #     - postgres
-  #   labels:
-  #     - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`)"
-  #   networks:
-  #   - psql-pgql
-  #   - web
-  #   ports:
-  #     - 5433
-  #   expose:
-  #     - 5433
-  #   command:
-  #     [
-  #       "-w",
-  #       "--cors",
-  #       "-c",
-  #       "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
-  #       "-s",
-  #       "api",
-  #       "--extended-errors",
-  #       "hint,detail,errcode",
-  #       "--jwt-secret",
-  #       $JWT_SECRET,
-  #       "--token",
-  #       "api.jwt_token",
-  #       "--default-role",
-  #       "unregistered"
-  #     ]
+  graphql:
+    container_name: graphql
+    restart: always
+    image: graphile/postgraphile
+    environment:
+      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
+      PORT: 5432
+    depends_on:
+      - postgres
+    labels:
+      - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`)"
+    networks:
+    - psql-pgql
+    - web
+    ports:
+      - 5000:5000
+    command:
+      [
+        "-w",
+        "--cors",
+        "-c",
+        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
+        "-s",
+        "api",
+        "--extended-errors",
+        "hint,detail,errcode",
+        "--jwt-secret",
+        $JWT_SECRET,
+        "--token",
+        "api.jwt_token",
+        "--default-role",
+        "unregistered"
+      ]
 
   v3joegattnet:
     container_name: v3.joegatt.net
@@ -116,59 +114,43 @@ services:
     networks:
       - web
 
-  cratest:
-    container_name: cratest
+  joegattnetweb:
+    container_name: joegatt.net-web
     build: 
-      context: ./cratest
+      context: ./joegatt.net-web
       dockerfile: Dockerfile
     ports:
-      - 3001:3001
+      - 3007:3007
+    stdin_open: true 
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
     volumes:
-      - ./cratest:/usr/app/
-      - /usr/app/node_modules
+      - ./joegatt.net-web:/app/
+      - /app/node_modules
     labels:
-      - "traefik.http.routers.cratest.rule=Host(`cratest.localhost`)"
+      - "traefik.http.routers.joegattnetweb.rule=Host(`joegattnetweb.localhost`)"
     networks:
       - web
 
-  # v4joegattnet:
-  #   container_name: v4joegattnet
+  # sandboxcra:
+  #   container_name: sandboxcra
   #   build: 
-  #     context: ./joegatt.net-frontend
+  #     context: ./sandboxcra
   #     dockerfile: Dockerfile
   #   ports:
-  #     - 3007:3007
+  #     - 3001:3001
+  #   stdin_open: true 
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
   #   volumes:
-  #     - ./joegatt.net-frontend:/usr/src/app/
-  #     - /usr/src/app/node_modules
+  #     - ./sandboxcra:/app/
+  #     - /app/node_modules
   #   labels:
-  #     - "traefik.http.routers.v4joegattnet.rule=Host(`v4joegattnet.localhost`)"
+  #     - "traefik.http.routers.sandboxcra.rule=Host(`sandboxcra.localhost`)"
   #   networks:
   #     - web
-    
-  v4joegattnet:
-    container_name: v4.joegatt.net
-    build:
-      context: ./joegatt.net-frontend
-      dockerfile: Dockerfile
-    volumes:
-      # - './joegatt.net-frontend/public:/usr/src/app/public'
-      - './joegatt.net-frontend:/usr/src/app'
-      - '/usr/src/app/node_modules'
-      # - './joegatt.net-frontend:/app'
-      # - '/app/node_modules'
-    ports:
-      - 3007:3007
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-    labels:
-      - "traefik.http.routers.v4joegattnet.rule=Host(`v4joegattnet.localhost`)"
-    networks:
-      - web
 
   # prometheus:
   #   image: prom/prometheus:latest
@@ -202,11 +184,11 @@ services:
   #   - 6379:6379
 
 networks:
-  # psql-pgql:
-  # postgres:
-  #   driver: bridge
+  psql-pgql:
+  postgres:
+    driver: bridge
   web:
 
 volumes:
   postgres:
-  pgadmin:
+#   pgadmin:
