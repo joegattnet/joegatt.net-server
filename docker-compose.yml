@@ -114,24 +114,24 @@ services:
     networks:
       - web
 
-  joegattnetweb:
-    container_name: joegatt.net-web
-    build: 
-      context: ./joegatt.net-web
-      dockerfile: Dockerfile
-    ports:
-      - 3007:3007
-    stdin_open: true 
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./joegatt.net-web:/app/
-      - /app/node_modules
-    labels:
-      - "traefik.http.routers.joegattnetweb.rule=Host(`joegattnetweb.localhost`)"
-    networks:
-      - web
+  # joegattnetweb:
+  #   container_name: joegatt.net-web
+  #   build: 
+  #     context: ./joegatt.net-web
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3007:3007
+  #   stdin_open: true 
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
+  #   volumes:
+  #     - ./joegatt.net-web:/app/
+  #     - /app/node_modules
+  #   labels:
+  #     - "traefik.http.routers.joegattnetweb.rule=Host(`joegattnetweb.localhost`)"
+  #   networks:
+  #     - web
 
   # sandboxcra:
   #   container_name: sandboxcra
