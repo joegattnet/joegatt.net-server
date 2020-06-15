@@ -3,10 +3,7 @@
 	url = git@github.com:joegattnet/joegatt.net-db
 [submodule "joegatt.net-gardeners"]
 	path = joegatt.net-gardeners
-	url = git@github.com:joegattnet/joegatt.net-gardeners
-[submodule "joegatt.net-v3-html"]
-	path = joegatt.net-v3-html
-	url = git@github.com:joegattnet/joegatt.net-v3-html.git
+	url = git@github.com:joegattnet/joegatt.net-gardeners.git
 [submodule "joegatt.net-web"]
 	path = joegatt.net-web
 	url = git@github.com:joegattnet/joegatt.net-web.git
