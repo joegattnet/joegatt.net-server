@@ -7,3 +7,6 @@
 [submodule "joegatt.net-web"]
 	path = joegatt.net-web
 	url = git@github.com:joegattnet/joegatt.net-web.git
+[submodule "joegatt.net-couriers"]
+	path = joegatt.net-couriers
+	url = git@github.com:joegattnet/joegatt.net-couriers.git
