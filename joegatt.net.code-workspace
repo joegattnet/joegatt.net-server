@@ -5,6 +5,15 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "GitHub Light"
+		"workbench.colorTheme": "GitHub Light",
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": true,
+			"workbench.colorCustomizations": {
+				"editor.background": "#f0f0f0",
+				"editor.selectionBackground": "#ffff00",
+				"editor.selectionHighlightBackground": "#ffffcc",
+				"terminal.background": "#000000"
+		}
 	}
 }
