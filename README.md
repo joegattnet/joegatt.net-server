@@ -36,3 +36,8 @@ Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.
 - Do joegatt.net-couriers
 - Do puller
 - Do pusher
+
+## Refs
+
+https://blog.soshace.com/deploying-your-nodejs-code-to-a-server-every-time-you-push-with-github-actions/
+
