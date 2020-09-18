@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    runs-on: ubuntu-latest
+    steps:
+      - actions/checkout@v1
+      - uses: webfactory/ssh-agent@v0.4.0
+        with:
+            ssh-private-key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v2
+
+      - name: Run a multi-line script
+        run: |
+          ssh deployer@joegatt.org
+          cd apps
+          cd joegatt.net-server
+          git pull
+          
