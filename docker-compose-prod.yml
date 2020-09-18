@@ -1,6 +1,3 @@
-# https://support.microfocus.com/kb/doc.php?id=7013103
-# DOCKER_HOST, DOCKER_TLS_VERIFY, and DOCKER_CERT_PATH
-# https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files
 
 version: "3"
 services:
@@ -12,51 +9,9 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
-      - ./traefik/acme:/etc/traefik/acme
-      - ./traefik/.htpasswd:/etc/traefik/.htpasswd
-  app:
-    build: ./app
-    volumes:
-      - ./app:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=app-be"
-      - "traefik.frontend.rule=Host:app.greymatterbay.com"
-  blog:
-    build: ./blog
-    volumes:
-      - ./blog:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=blog-be"
-      - "traefik.frontend.rule=Host:blog.greymatterbay.com"
-  website:
-    build: ./website
-    volumes:
-      - ./website:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=website-be"
-      - "traefik.frontend.rule=Host:greymatterbay.com"
-
-  # Here use github repositories not local folders
-  nembrotcom:
-    build: ./nembrot.com
-    volumes:
-      - ./nembrot.com:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=nembrotcom-be"
-      - "traefik.frontend.rule=Host:nembrotcom.localhost"
 
   v3joegattnet:
-    build: ./v3.joegatt.net
-    volumes:
-      - ./v3.joegatt.net:/usr/share/nginx/html
+    build: git@github.com:joegattnet/joegatt.net-v3-html.git
     labels:
       - "traefik.enable=true"
-      - "traefik.backend=v3joegattnet-be"
-      - "traefik.frontend.rule=Host:v3joegattnet.localhost"
-# networks:
-#   psql-pgql:
+      - "traefik.frontend.rule=Host:joegatt.net"
