@@ -11,6 +11,10 @@
 # https://medium.com/@beld_pro/quick-tip-creating-a-postgresql-container-with-default-user-and-password-8bb2adb82342
 # https://medium.com/@xiaolishen/develop-in-docker-a-node-backend-and-a-react-front-end-talking-to-each-other-5c522156f634
 # https://www.digitalocean.com/community/tutorials/how-to-use-traefik-as-a-reverse-proxy-for-docker-containers-on-ubuntu-18-04
+# https://support.microfocus.com/kb/doc.php?id=7013103
+# DOCKER_HOST, DOCKER_TLS_VERIFY, and DOCKER_CERT_PATH
+# https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files
+https://stackoverflow.com/questions/34120504/how-can-i-make-docker-compose-build-an-image-from-a-remote-git-repository
 
 version: "3.3"
 
