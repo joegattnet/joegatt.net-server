@@ -8,13 +8,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: webfactory/ssh-agent@v0.4.0
+      - name: Update code
+      - uses: appleboy/ssh-action@master
         with:
-            ssh-private-key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}      
-
-      - name: Run a multi-line script
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_HOSTNAME }}
-          cd apps
-          cd joegatt.net-server
-          git pull
+          host: joegatt.org
+          username: deployer
+          key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd apps
+            cd joegatt.net-server
+            git pull
