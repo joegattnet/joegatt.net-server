@@ -10,12 +10,13 @@ jobs:
     steps:
       - uses: webfactory/ssh-agent@v0.4.0
         with:
-            ssh-private-key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+            ssh-private-key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}      
 
       - uses: actions/checkout@v2
 
       - name: Run a multi-line script
         run: |
+          ssh-keyscan -H ${{ SERVER_IP_ADDRESS }} >> ~/.ssh/known_hosts
           ssh deployer@joegatt.org
           cd apps
           cd joegatt.net-server
