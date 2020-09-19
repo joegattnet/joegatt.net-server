@@ -16,8 +16,7 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          ssh-keyscan -H ${{ secrets.SERVER_HOSTNAME }} >> ~/.ssh/known_hosts
-          ssh ${{ secrets.SERVER_HOSTNAME }}
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_HOSTNAME }}
           cd apps
           cd joegatt.net-server
           git pull
