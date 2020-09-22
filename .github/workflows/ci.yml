@@ -6,16 +6,17 @@ on:
 
     jobs:
       build:
+        name: Build
         runs-on: ubuntu-latest
         steps:
-          - name: Update code
-            uses: fifsky/ssh-action@master
-            with:
-              command: |
-                cd apps
-                cd joegatt.net-server
-                cat bużejża.txt
-              host: joegatt.org
-              user: deployer
-              key: ${{ ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
-              args: "-tt -vvv"
+        - name: Update code
+          uses: fifsky/ssh-action@master
+          with:
+            command: |
+              cd apps
+              cd joegatt.net-server
+              cat bużejża.txt
+            host: joegatt.org
+            user: deployer
+            key: ${{ ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+            args: "-tt -vvv"
