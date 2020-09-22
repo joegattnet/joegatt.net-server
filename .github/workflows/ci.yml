@@ -19,4 +19,3 @@ jobs:
         host: joegatt.org
         user: deployer
         key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
-        args: "-tt -vvv"
