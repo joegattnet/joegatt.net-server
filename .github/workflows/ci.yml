@@ -8,7 +8,7 @@ on:
     build:
       runs-on: ubuntu-latest
       steps:
-        - name: ls -a via OPEN SSH Private Key
+        - name: Update code
           uses: fifsky/ssh-action@master
           with:
             command: |
