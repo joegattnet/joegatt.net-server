@@ -14,7 +14,6 @@ on:
             command: |
               cd apps
               cd joegatt.net-server
-#             git pull
               cat bużejża.txt
             host: joegatt.org
             user: deployer
