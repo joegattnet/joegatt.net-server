@@ -1,5 +1,13 @@
 version: "3"
+
 services:
+  app:
+    image: gcea/ssh-client
+    environment:
+      SSH_AUTH_SOCK: /ssh-agent/ssh-agent.sock
+    volumes:
+      - ssh-agent:/ssh-agent
+
   traefik:
     image: traefik
     ports:
