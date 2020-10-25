@@ -22,3 +22,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:joegatt.net"
+
+volumes:
+  ssh-agent:
+    external: true
