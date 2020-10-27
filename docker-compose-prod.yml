@@ -16,4 +16,4 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:joegatt.net"
     volumes:
-      - ~/.ssh:/deployer/.ssh:ro
+      - ~/.ssh:~/deployer/.ssh:ro
