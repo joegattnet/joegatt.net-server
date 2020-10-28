@@ -16,7 +16,6 @@ services:
     container_name: v3.joegatt.net
     build: 
       context: ./joegatt.net-v3-html
-      dockerfile: Dockerfile
     ports:
       - "80:80"
       - "443:443"
