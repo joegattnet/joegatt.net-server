@@ -9,11 +9,24 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - web
 
   v3joegattnet:
-    build: git@github.com:joegattnet/joegatt.net-v3-html.git
+    container_name: v3.joegatt.net
+    build: 
+      context: ./joegatt.net-v3-html
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:joegatt.net"
-    volumes:
-      - ~/.ssh:~/deployer/.ssh:ro
+    networks:
+      - web
+  
+  networks:
+    web:
