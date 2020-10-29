@@ -7,3 +7,9 @@
 [submodule "joegatt.net-factory"]
 	path = joegatt.net-factory
 	url = git@github.com:joegattnet/joegatt.net-factory.git
+[submodule "joegatt.net-v3-html"]
+	path = joegatt.net-v3-html
+	url = git@github.com:joegattnet/joegatt.net-v3-html.git
+[submodule "joegatt.net-pantography"]
+	path = joegatt.net-pantography
+	url = git@github.com:joegattnet/joegatt.net-pantography.git
