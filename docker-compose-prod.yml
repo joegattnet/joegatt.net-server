@@ -18,7 +18,7 @@ services:
       context: ./joegatt.net-v3-html
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443"
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
