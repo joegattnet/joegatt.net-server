@@ -25,7 +25,7 @@ services:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.v3joegattnet.rule=Host(`joegatt.net`, `www.joegatt.net`, `v3.joegatt.net`)"
+      - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       - "traefik.http.routers.v3joegattnet.entrypoints=web"
       # - "traefik.http.routers.v3joegattnet.middlewares=test-replacepathregex"
       # - "traefik.http.middlewares.test-redirectregex.redirectregex.regex=^https://www.joegatt.net/(.*)"
