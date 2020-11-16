@@ -20,7 +20,7 @@ This repository includes submodules for several applications. To clone the entir
 
 ## Dashboard
 
-    docker-compose up
+    docker-compose up -f docker-compose-prod.yml --force-recreate
 
 Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.
 
@@ -40,4 +40,3 @@ Then go to http://localhost:8080/dashboard/ for Traefik's dashboard.
 ## Refs
 
 https://blog.soshace.com/deploying-your-nodejs-code-to-a-server-every-time-you-push-with-github-actions/
-

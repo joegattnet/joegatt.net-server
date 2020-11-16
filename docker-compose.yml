@@ -14,7 +14,7 @@
 # https://support.microfocus.com/kb/doc.php?id=7013103
 # DOCKER_HOST, DOCKER_TLS_VERIFY, and DOCKER_CERT_PATH
 # https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files
-https://stackoverflow.com/questions/34120504/how-can-i-make-docker-compose-build-an-image-from-a-remote-git-repository
+# https://stackoverflow.com/questions/34120504/how-can-i-make-docker-compose-build-an-image-from-a-remote-git-repository
 
 version: "3.3"
 
@@ -33,7 +33,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
     networks:
       - web
-      
+
   postgres:
     container_name: postgres
     restart: always
@@ -54,21 +54,21 @@ services:
       - psql-pgql
       - postgres
 
-  # pgadmin:
-  #   container_name: pgadmin
-  #   image: dpage/pgadmin4
-  #   depends_on:
-  #     - postgres
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
-  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-  #   volumes:
-  #     - pgadmin:/root/.pgadmin
-  #   ports:
-  #     - "${PGADMIN_PORT:-5050}:80"
-  #   networks:
-  #     - postgres
-  #   restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
 
   graphql:
     container_name: graphql
@@ -82,8 +82,8 @@ services:
     labels:
       - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`)"
     networks:
-    - psql-pgql
-    - web
+      - psql-pgql
+      - web
     ports:
       - 5000:5000
     command:
@@ -104,6 +104,25 @@ services:
         "unregistered"
       ]
 
+  joegattnetweb:
+    container_name: joegatt.net-web
+    build: 
+      context: ./joegatt.net-web
+      dockerfile: Dockerfile
+    ports:
+      - 3007:3007
+    stdin_open: true 
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./joegatt.net-web:/app/
+      - /app/node_modules
+    labels:
+      - "traefik.http.routers.joegattnetweb.rule=Host(`joegattnetweb.localhost`)"
+    networks:
+      - web
+    
   v3joegattnet:
     container_name: v3.joegatt.net
     build: 
@@ -117,25 +136,6 @@ services:
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3joegattnet.localhost`)"
     networks:
       - web
-
-  # joegattnetweb:
-  #   container_name: joegatt.net-web
-  #   build: 
-  #     context: ./joegatt.net-web
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 3007:3007
-  #   stdin_open: true 
-  #   environment:
-  #     - NODE_ENV=development
-  #     - CHOKIDAR_USEPOLLING=true
-  #   volumes:
-  #     - ./joegatt.net-web:/app/
-  #     - /app/node_modules
-  #   labels:
-  #     - "traefik.http.routers.joegattnetweb.rule=Host(`joegattnetweb.localhost`)"
-  #   networks:
-  #     - web
 
   # sandboxcra:
   #   container_name: sandboxcra
@@ -195,4 +195,4 @@ networks:
 
 volumes:
   postgres:
-#   pgadmin:
+  pgadmin:
