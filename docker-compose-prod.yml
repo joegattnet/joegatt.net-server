@@ -17,6 +17,60 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.4-alpine
+    build:
+      context: ./joegatt.net-db
+    volumes:
+      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
+    expose:
+      - 5432
+    ports:
+      - 5432
+    networks:
+      - psql-pgql
+      - postgres
+    
+  graphql:
+    container_name: graphql
+    restart: always
+    image: graphile/postgraphile
+    environment:
+      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
+      PORT: 5432
+    depends_on:
+      - postgres
+    labels:
+      - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`)"
+    networks:
+      - psql-pgql
+      - web
+    ports:
+      - 5000:5000
+    command:
+      [
+        "-w",
+        "--cors",
+        "-c",
+        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
+        "-s",
+        "api",
+        "--extended-errors",
+        "hint,detail,errcode",
+        "--jwt-secret",
+        $JWT_SECRET,
+        "--token",
+        "api.jwt_token",
+        "--default-role",
+        "unregistered"
+      ]
+
   v3joegattnet:
     container_name: v3.joegatt.net
     build: 
@@ -27,7 +81,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       - "traefik.http.routers.v3joegattnet.entrypoints=web"
-      # - "traefik.http.routers.v3joegattnet.middlewares=test-replacepathregex"
-      # - "traefik.http.middlewares.test-redirectregex.redirectregex.regex=^https://www.joegatt.net/(.*)"
-      # - "traefik.http.middlewares.test-redirectregex.redirectregex.replacement=https://joegatt.net/$${1}"
-      # - "traefik.http.middlewares.test-redirectregex.redirectregex.permanent=true"
+
+networks:
+  psql-pgql:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+      
