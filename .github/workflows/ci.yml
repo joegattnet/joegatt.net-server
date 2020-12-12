@@ -9,14 +9,17 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Update code
-      uses: fifsky/ssh-action@master
+    - name: Repository checkout
+      uses: actions/checkout@v2
+    - name: Connects to VPS via SSH
+      uses: appleboy/ssh-action@v0.1.3
       with:
-        command: |
-          cd apps
-          cd joegatt.net-server
-          cat bużejża.txt
-        host: joegatt.org
-        user: deployer
-        key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
-        pass: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
+          host: ${{ secrets.DEPLOYER_IP_ADDRESS }}
+          port: ${{ secrets.DEPLOYER_PORT }}
+          username: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+          key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+          passphrase: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
+          script: |
+            cd apps
+            cd joegatt.net-server
+            cat bużejża2.txt
