@@ -14,12 +14,12 @@ jobs:
     - name: Connects to VPS via SSH
       uses: appleboy/ssh-action@v0.1.3
       with:
-          host: ${{ secrets.DEPLOYER_IP_ADDRESS }}
-          port: ${{ secrets.DEPLOYER_PORT }}
-          username: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
-          key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
-          passphrase: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
-          script: |
-            cd apps
-            cd joegatt.net-server
-            cat bużejża2.txt
+        host: ${{ secrets.DEPLOYER_CI_IP_ADDRESS }}
+        port: ${{ secrets.DEPLOYER_CI_PORT }}
+        username: ${{ secrets.DEPLOYER_CI_USER_NAME }}
+        key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+        passphrase: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
+        script: |
+          cd apps
+          cd joegatt.net-server
+          cat bużejża2.txt
