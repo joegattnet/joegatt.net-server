@@ -21,4 +21,4 @@ jobs:
         passphrase: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
         script: |
           cd joegatt.net-server
-          cat bużejża917.txt
+          touch bużejża917.txt
