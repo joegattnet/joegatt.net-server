@@ -72,11 +72,11 @@ services:
       ]
 
   factory:
-    container_name: v3.joegatt.net
+    container_name: factory.joegatt.net
     build: 
-      context: ./joegatt.net-v3-html
+      context: ./joegatt.net-factory
     volumes:
-      - ./joegatt.net-v3-html:/usr/share/nginx/html
+      - ./joegatt.net-factory:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
