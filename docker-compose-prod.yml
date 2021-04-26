@@ -71,6 +71,18 @@ services:
         "unregistered"
       ]
 
+  factory:
+    container_name: v3.joegatt.net
+    build: 
+      context: ./joegatt.net-v3-html
+    volumes:
+      - ./joegatt.net-v3-html:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
+      - "traefik.http.routers.factory.entrypoints=web"
+    command: node ./dist/index.js
+    
   v3joegattnet:
     container_name: v3.joegatt.net
     build: 
