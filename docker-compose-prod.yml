@@ -76,13 +76,14 @@ services:
     build: 
       context: ./joegatt.net-factory
     volumes:
-      - ./joegatt.net-factory:/usr/share/nginx/html
+      - ./tmp/npm:/root/.npm:z
+      - ./joegatt.net-factory/src:/usr/src/app/src:z
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
       - "traefik.http.routers.factory.entrypoints=web"
     command: node ./dist/index.js
-    
+
   v3joegattnet:
     container_name: v3.joegatt.net
     build: 
