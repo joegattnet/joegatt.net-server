@@ -83,6 +83,8 @@ services:
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
       - "traefik.http.routers.factory.entrypoints=web"
     command: node ./dist/index.js
+    environment:
+      - NODE_ENV=production
     restart: always
 
   v3joegattnet:
