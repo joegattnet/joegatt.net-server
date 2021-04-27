@@ -102,6 +102,7 @@ networks:
   psql-pgql:
   postgres:
     driver: bridge
+  web:
 
 volumes:
   postgres:
