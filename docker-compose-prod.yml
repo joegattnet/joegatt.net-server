@@ -6,7 +6,7 @@ services:
     image: "traefik:v2.3"
     container_name: "traefik"
     command:
-      #- "--log.level=DEBUG"
+      - "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -82,7 +82,7 @@ services:
       - ./joegatt.net-factory/src:/usr/src/app/src:z
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`, `v4.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
       - "traefik.http.routers.factory.entrypoints=web"
     command: node ./dist/index.js
     environment:
