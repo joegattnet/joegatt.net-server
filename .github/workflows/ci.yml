@@ -21,4 +21,6 @@ jobs:
         passphrase: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
         script: |
           cd joegatt.net-server
-          touch bużejża917.txt
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa_deploykey_unsigned
+          git pull
