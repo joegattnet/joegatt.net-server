@@ -48,7 +48,7 @@ services:
       - postgres
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.graphql.rule=Host(`v4.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
       - "traefik.http.routers.graphql.entrypoints=web"
     networks:
       - psql-pgql
