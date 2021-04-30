@@ -17,61 +17,62 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  # postgres:
-  #   container_name: postgres
-  #   restart: always
-  #   image: postgres:10.4-alpine
-  #   build:
-  #     context: ./joegatt.net-db
-  #   volumes:
-  #     - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
-  #   environment:
-  #     POSTGRES_USER: ${JOEGATTNET_USER}
-  #     POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
-  #     POSTGRES_DB: ${JOEGATTNET_DB}
-  #   expose:
-  #     - 5432
-  #   ports:
-  #     - 5432
-  #   networks:
-  #     - psql-pgql
-  #     - postgres
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.4-alpine
+    build:
+      context: ./joegatt.net-db
+    volumes:
+      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
+    expose:
+      - 5432
+    ports:
+      - 5432
+    networks:
+      - psql-pgql
+      - postgres
     
-  # graphql:
-  #   container_name: graphql
-  #   restart: always
-  #   image: graphile/postgraphile
-  #   environment:
-  #     DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
-  #     PORT: 5432
-  #   depends_on:
-  #     - postgres
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
-  #     - "traefik.http.routers.graphql.entrypoints=web"
-  #   networks:
-  #     - psql-pgql
-  #     - web
-  #   ports:
-  #     - 5000:5000
-  #   command:
-  #     [
-  #       "-w",
-  #       "--cors",
-  #       "-c",
-  #       "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
-  #       "-s",
-  #       "api",
-  #       "--extended-errors",
-  #       "hint,detail,errcode",
-  #       "--jwt-secret",
-  #       $JWT_SECRET,
-  #       "--token",
-  #       "api.jwt_token",
-  #       "--default-role",
-  #       "unregistered"
-  #     ]
+  graphql:
+    container_name: graphql
+    restart: always
+    image: graphile/postgraphile
+    environment:
+      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
+      PORT: 5432
+    depends_on:
+      - postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
+      - "traefik.http.routers.graphql.entrypoints=web"
+      - "traefik.port=5000"
+    networks:
+      - psql-pgql
+      - web
+    ports:
+      - 5000:5000
+    command:
+      [
+        "-w",
+        "--cors",
+        "-c",
+        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
+        "-s",
+        "api",
+        "--extended-errors",
+        "hint,detail,errcode",
+        "--jwt-secret",
+        $JWT_SECRET,
+        "--token",
+        "api.jwt_token",
+        "--default-role",
+        "unregistered"
+      ]
 
   factory:
     container_name: factory.joegatt.net
