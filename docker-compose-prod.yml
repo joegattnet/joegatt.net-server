@@ -91,10 +91,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
-      - "traefik.port=80"
-      - "traefik.http.middlewares.pgAdmin-prefix.stripprefix.prefixes=/pgadmin"
-      - "traefik.http.routers.pgAdmin.middlewares=pgAdmin-prefix"
-      - "traefik.http.routers.pgAdmin.service=pgAdmin"
     restart: unless-stopped
 
   postgres:
