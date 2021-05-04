@@ -81,8 +81,7 @@ services:
     expose:
       - "80"
     ports:
-      # - "5050:80"
-      - "15432:80"
+       - "5050:80"
     networks:
       - postgres
       - web
