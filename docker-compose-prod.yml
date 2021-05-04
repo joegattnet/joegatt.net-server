@@ -12,7 +12,8 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
     ports:
-      - "80:80"
+      - "80:80
+      - "443:443"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -91,6 +92,7 @@ services:
     restart: always
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4:4
     depends_on:
       - postgres
@@ -108,14 +110,13 @@ services:
       - ./pgadmin:/root/.pgadmin
     labels:
       - "traefik.enable=true"
-      - "traefik.port=80"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
     restart: unless-stopped
 
   v3joegattnet:
     container_name: v3.joegatt.net
-    build: 
+    build:
       context: ./joegatt.net-v3-html
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
