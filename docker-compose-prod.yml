@@ -6,7 +6,7 @@ services:
     image: "traefik:v2.3"
     container_name: "traefik"
     command:
-      - "--log.level=ERROR"
+      - "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -16,26 +16,22 @@ services:
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
-  postgres:
-    container_name: postgres
-    restart: always
-    image: postgres:10.4-alpine
-    build:
-      context: ./joegatt.net-db
+    
+  factory:
+    container_name: factory.joegatt.net
+    build: 
+      context: ./joegatt.net-factory
     volumes:
-      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+      - ./tmp/npm:/root/.npm:z
+      - ./joegatt.net-factory/src:/usr/src/app/src:z
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
+      - "traefik.http.routers.factory.entrypoints=web"
+    command: node ./dist/index.js
     environment:
-      POSTGRES_USER: ${JOEGATTNET_USER}
-      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
-      POSTGRES_DB: ${JOEGATTNET_DB}
-    expose:
-      - 5432
-    ports:
-      - 5432
-    networks:
-      - psql-pgql
-      - postgres
+      - NODE_ENV=production
+    restart: always
     
   graphql:
     container_name: graphql
@@ -74,22 +70,6 @@ services:
         "unregistered"
       ]
 
-  factory:
-    container_name: factory.joegatt.net
-    build: 
-      context: ./joegatt.net-factory
-    volumes:
-      - ./tmp/npm:/root/.npm:z
-      - ./joegatt.net-factory/src:/usr/src/app/src:z
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
-      - "traefik.http.routers.factory.entrypoints=web"
-    command: node ./dist/index.js
-    environment:
-      - NODE_ENV=production
-    restart: always
-
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:4
@@ -111,8 +91,29 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.port=80"
     restart: unless-stopped
 
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.4-alpine
+    build:
+      context: ./joegatt.net-db
+    volumes:
+      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
+    expose:
+      - 5432
+    ports:
+      - 5432
+    networks:
+      - psql-pgql
+      - postgres
+  
   v3joegattnet:
     container_name: v3.joegatt.net
     build:
