@@ -6,7 +6,7 @@ services:
     image: "traefik:v2.3"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=ERROR"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -95,7 +95,6 @@ services:
       - "traefik.port=80"
       - "traefik.http.middlewares.pgAdmin-prefix.stripprefix.prefixes=/pgadmin"
       - "traefik.http.routers.pgAdmin.middlewares=pgAdmin-prefix"
-      - "traefik.http.routers.pgAdmin.entrypoints=web"
       - "traefik.http.routers.pgAdmin.service=pgAdmin"
     restart: unless-stopped
 
