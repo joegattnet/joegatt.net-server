@@ -90,6 +90,29 @@ services:
       - NODE_ENV=production
     restart: always
 
+  pgadmin:
+    image: dpage/pgadmin4:4
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    expose:
+      - "80"
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+      - web
+    volumes:
+      - ./pgadmin:/root/.pgadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+    restart: unless-stopped
+
   v3joegattnet:
     container_name: v3.joegatt.net
     build: 
