@@ -15,7 +15,7 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"      
+      - "traefik.http.middlewares.auth.basicauth.users=test:${TRAEFIK_PASSWORD}"      
     ports:
       - "80:80"
       - "8080:8080"
@@ -85,11 +85,12 @@ services:
     networks:
       - postgres
     ports:
-      - "${PGADMIN_PORT:-5050}:80"
+      - "${PGADMIN_PORT:-5050}:5050"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.port=5050"
     restart: unless-stopped
 
   postgres:
