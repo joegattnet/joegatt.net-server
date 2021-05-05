@@ -48,7 +48,6 @@ services:
       - "traefik.port=5000"
     networks:
       - psql-pgql
-      - web
     ports:
       - 5000:5000
     command:
