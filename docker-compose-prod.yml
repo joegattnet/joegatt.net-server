@@ -15,7 +15,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.dashboard.service=api@internal"
-      ports:
+    ports:
       - "80:80"
       - "8080:8080"
     volumes:
