@@ -72,12 +72,13 @@ services:
 
   pgadmin:
     container_name: pgadmin
-    image: dpage/pgadmin4:4
+    image: dpage/pgadmin4:latest
     depends_on:
       - postgres
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      SCRIPT_NAME: '/pgadmin4'
     expose:
       - "80"
     ports:
@@ -86,11 +87,13 @@ services:
       - postgres
       - web
     volumes:
-      - ./pgadmin:/root/.pgadmin
+      # - ./pgadmin:/root/.pgadmin
+      - pgadm:/var/lib/pgadmin
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.frontend.rule=PathPrefix:/pgadmin4"  
     restart: unless-stopped
 
   postgres:
