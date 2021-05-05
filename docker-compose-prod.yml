@@ -82,8 +82,6 @@ services:
     networks:
       - postgres
       - web
-    volumes:
-      - ./pgadmin:/root/.pgadmin
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
@@ -126,9 +124,11 @@ networks:
   psql-pgql:
   postgres:
     driver: bridge
+    external: true
   web:
+    external: true
 
 volumes:
-  postgres:
   pgadmin:
+  postgres:
       
