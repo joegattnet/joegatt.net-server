@@ -45,7 +45,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
-      - "traefik.http.routers.graphql.entrypoints=web"
       - "traefik.port=5000"
     networks:
       - psql-pgql
@@ -80,11 +79,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}s
     networks:
       - postgres
-      - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
-      - "traefik.http.routers.pgadmin.entrypoints=web"
     restart: unless-stopped
 
   postgres:
@@ -116,13 +113,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
-      - "traefik.http.routers.v3joegattnet.entrypoints=web"
 
 networks:
   psql-pgql:
   postgres:
     driver: bridge
-  web:
 
 volumes:
   pgadmin:
