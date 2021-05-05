@@ -7,7 +7,7 @@ services:
     container_name: "traefik"
     command:
       - "--log.level=ERROR"
-      - "--api.insecure=true"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -15,6 +15,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"      
     ports:
       - "80:80"
       - "8080:8080"
@@ -88,7 +89,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
-      - "traefik.http.routers.factory.entrypoints=web"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
     restart: unless-stopped
 
   postgres:
@@ -120,7 +121,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
-      - "traefik.http.routers.factory.entrypoints=web"
+      - "traefik.http.routers.v3joegattnet.entrypoints=web"
 
 networks:
   psql-pgql:
