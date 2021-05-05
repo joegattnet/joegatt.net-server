@@ -15,7 +15,7 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=test:${TRAEFIK_PASSWORD}"      
+      - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"      
     ports:
       - "80:80"
       - "8080:8080"
