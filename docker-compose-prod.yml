@@ -10,12 +10,21 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    
+
+  api:
+    dashboard: true
+    insecure: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.factory.rule=Host(`joegatt.net`) && Path(`/traefik/dashboard/`)"
+      - "traefik.http.routers.factory.entrypoints=web"
+
   factory:
     container_name: factory.joegatt.net
     build: 
@@ -26,6 +35,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
+      - "traefik.http.routers.factory.entrypoints=web"
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
@@ -42,8 +52,9 @@ services:
       - postgres
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
       - "traefik.port=5000"
+      - "traefik.http.routers.graphql.entrypoints=web"
     networks:
       - psql-pgql
     ports:
@@ -81,6 +92,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
+      - "traefik.http.routers.factory.entrypoints=web"
     restart: unless-stopped
 
   postgres:
@@ -112,6 +124,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
+      - "traefik.http.routers.factory.entrypoints=web"
 
 networks:
   psql-pgql:
