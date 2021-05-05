@@ -16,12 +16,13 @@ services:
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
-  http:
-    routers:
-      dashboard:
-        rule: Host(`traefik.example.com`)
-        service: api@internal
+  
+  dashboard:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.joegatt.net`"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+      - "traefik.http.routers.dashboard.service=api@internal"
 
   factory:
     container_name: factory.joegatt.net
