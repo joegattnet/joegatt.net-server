@@ -12,9 +12,9 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
     labels:
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.joegatt.net`)"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"      
     ports:
       - "80:80"
