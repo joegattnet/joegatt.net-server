@@ -22,7 +22,7 @@ services:
     insecure: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`joegatt.net`) && Path(`/traefik/dashboard/`)"
+      - "traefik.http.routers.factory.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.factory.entrypoints=web"
 
   factory:
