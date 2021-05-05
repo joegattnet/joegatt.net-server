@@ -88,7 +88,7 @@ services:
       - web
     volumes:
       # - ./pgadmin:/root/.pgadmin
-      - pgadm:/var/lib/pgadmin
+      - pgadmin:/var/lib/pgadmin
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
