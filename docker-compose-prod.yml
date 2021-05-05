@@ -17,13 +17,19 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  api:
-    dashboard: true
-    insecure: true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`traefik.joegatt.net`)"
-      - "traefik.http.routers.factory.entrypoints=web"
+  http:
+    routers:
+      dashboard:
+        rule: Host(`traefik.example.com`)
+        service: api@internal
+        middlewares:
+          - auth
+    middlewares:
+      auth:
+        basicAuth:
+          users:
+            - "test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/"
+            - "test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
 
   factory:
     container_name: factory.joegatt.net
