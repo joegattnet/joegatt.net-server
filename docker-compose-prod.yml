@@ -124,9 +124,7 @@ networks:
   psql-pgql:
   postgres:
     driver: bridge
-    external: true
   web:
-    external: true
 
 volumes:
   pgadmin:
