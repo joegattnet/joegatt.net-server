@@ -6,7 +6,7 @@ services:
     image: "traefik:v2.3"
     container_name: "traefik"
     command:
-      - "--log.level=ERROR"
+      - "--log.level=DEBUG"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
