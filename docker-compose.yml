@@ -1,38 +1,105 @@
-# https://gist.github.com/gitaarik/8735255
-# https://github.com/nicholaskajoh/jack
-# https://github.com/nicholaskajoh/jack/blob/master/docker-compose.prod.yml
-# https://stackoverflow.com/questions/34120504/how-can-i-make-docker-compose-build-an-image-from-a-remote-git-repository
-# https://github.com/alexisrolland/docker-postgresql-postgraphile
-# https://medium.com/mobileforgood/coding-tips-patterns-for-continuous-integration-with-docker-on-travis-ci-9cedb8348a62
-# https://medium.com/coderbunker/a-better-way-to-develop-your-graphql-api-using-docker-postgresql-postgraphile-7a1ae034b826
-# https://stackoverflow.com/questions/36781984/load-postgres-dump-after-docker-compose-up
-# https://hub.docker.com/_/postgres/
-# https://hackernoon.com/dockerizing-an-existing-rails-postgresql-app-with-docker-compose-a30a7e1b3f40
-# https://medium.com/@beld_pro/quick-tip-creating-a-postgresql-container-with-default-user-and-password-8bb2adb82342
-# https://medium.com/@xiaolishen/develop-in-docker-a-node-backend-and-a-react-front-end-talking-to-each-other-5c522156f634
-# https://www.digitalocean.com/community/tutorials/how-to-use-traefik-as-a-reverse-proxy-for-docker-containers-on-ubuntu-18-04
-# https://support.microfocus.com/kb/doc.php?id=7013103
-# DOCKER_HOST, DOCKER_TLS_VERIFY, and DOCKER_CERT_PATH
-# https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files
-# https://stackoverflow.com/questions/34120504/how-can-i-make-docker-compose-build-an-image-from-a-remote-git-repository
-
 version: "3.3"
 
 services:
+
   traefik:
-    container_name: traefik_container
-    image: traefik:v2.2
-    command: --api.insecure=true --providers.docker --entrypoints.web.address=:80
-    ports:
-      - "80:80" # The HTTP port
-      - "8080:8080" # The Web UI (enabled by --api)
-      - "443:443" # Secure port
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+    image: "traefik:v2.4"
+    container_name: "traefik"
+    command:
+      - "--log.level=ERROR"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=web"
+      - "--entrypoints.web.address=:80"
+    depends_on:
+      - factory
+      - graphql
+      - pgadmin
+      - v3joegattnet
     labels:
-      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"     
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - web
+
+  factory:
+    container_name: factory.joegatt.net
+    build: 
+      context: ./joegatt.net-factory
+    volumes:
+      - ./tmp/npm:/root/.npm:z
+      - ./joegatt.net-factory/src:/usr/src/app/src:z
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.factory.rule=Host(`factory.localhost`, `joegattorg.localhost`)"
+      - "traefik.http.routers.factory.entrypoints=web"
+    command: node ./dist/index.js
+    environment:
+      - NODE_ENV=production
+    networks:
+      - web
+    restart: always
+    
+  graphql:
+    container_name: graphql
+    image: graphile/postgraphile
+    environment:
+      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
+      PORT: 5432
+    depends_on:
+      - postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`) && (PathPrefix(`/graphiql`) || PathPrefix(`/graphql`))"
+      - "traefik.http.routers.factory.entrypoints=web"
+      - "traefik.port=5000"
+    networks:
+      - psql-pgql
+      - web
+    command:
+      [
+        "-w",
+        "--cors",
+        "-c",
+        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
+        "-s",
+        "api",
+        "--extended-errors",
+        "hint,detail,errcode",
+        "--jwt-secret",
+        $JWT_SECRET,
+        "--token",
+        "api.jwt_token",
+        "--default-role",
+        "unregistered"
+      ]
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    networks:
+      - postgres
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.localhost`) && (PathPrefix(`/pgadmin4`))"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.port=5050"
+    restart: unless-stopped
 
   postgres:
     container_name: postgres
@@ -54,144 +121,25 @@ services:
       - psql-pgql
       - postgres
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-    volumes:
-      - pgadmin:/root/.pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-  graphql:
-    container_name: graphql
-    restart: always
-    image: graphile/postgraphile
-    environment:
-      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
-      PORT: 5432
-    depends_on:
-      - postgres
-    labels:
-      - "traefik.http.routers.graphql.rule=Host(`graphql.localhost`)"
-    networks:
-      - psql-pgql
-      - web
-    ports:
-      - 5000:5000
-    command:
-      [
-        "-w",
-        "--cors",
-        "-c",
-        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
-        "-s",
-        "api",
-        "--extended-errors",
-        "hint,detail,errcode",
-        "--jwt-secret",
-        $JWT_SECRET,
-        "--token",
-        "api.jwt_token",
-        "--default-role",
-        "unregistered"
-      ]
-
-  joegattnetweb:
-    container_name: joegatt.net-web
-    build: 
-      context: ./joegatt.net-web
-      dockerfile: Dockerfile
-    ports:
-      - 3007:3007
-    stdin_open: true 
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./joegatt.net-web:/app/
-      - /app/node_modules
-    labels:
-      - "traefik.http.routers.joegattnetweb.rule=Host(`joegattnetweb.localhost`)"
-    networks:
-      - web
-    
   v3joegattnet:
     container_name: v3.joegatt.net
-    build: 
+    build:
       context: ./joegatt.net-v3-html
-      dockerfile: Dockerfile
-    ports:
-      - 3006:3006
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
-      - "traefik.http.routers.v3joegattnet.rule=Host(`v3joegattnet.localhost`)"
+      - "traefik.enable=true"
+      - "traefik.http.routers.v3joegattnet.rule=Host(`v3joegattnet.localhost`, `joegattnet.localhost`)"
+      - "traefik.http.routers.v3joegattnet.entrypoints=web"
     networks:
       - web
-
-  # sandboxcra:
-  #   container_name: sandboxcra
-  #   build: 
-  #     context: ./sandboxcra
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 3001:3001
-  #   stdin_open: true 
-  #   environment:
-  #     - NODE_ENV=development
-  #     - CHOKIDAR_USEPOLLING=true
-  #   volumes:
-  #     - ./sandboxcra:/app/
-  #     - /app/node_modules
-  #   labels:
-  #     - "traefik.http.routers.sandboxcra.rule=Host(`sandboxcra.localhost`)"
-  #   networks:
-  #     - web
-
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   ports:
-  #   - 9090:9090
-  #   command:
-  #   - --config.file=/etc/prometheus/prometheus.yml
-  #   volumes:
-  #   - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-  #   depends_on:
-  #   - cadvisor
-
-  # cadvisor:
-  #   image: google/cadvisor:latest
-  #   container_name: cadvisor
-  #   ports:
-  #   - 9191:9191
-  #   volumes:
-  #   - /:/rootfs:ro
-  #   - /var/run:/var/run:rw
-  #   - /sys:/sys:ro
-  #   - /var/lib/docker/:/var/lib/docker:ro
-  #   depends_on:
-  #   - redis
-
-  # redis:
-  #   image: redis:latest
-  #   container_name: redis
-  #   ports:
-  #   - 6379:6379
 
 networks:
   psql-pgql:
   postgres:
     driver: bridge
   web:
+    driver: bridge
 
 volumes:
   postgres:

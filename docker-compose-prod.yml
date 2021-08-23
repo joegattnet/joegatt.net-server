@@ -6,36 +6,38 @@ services:
     image: "traefik:v2.3"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
-      - "--api.insecure=true"
+      - "--log.level=ERROR"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+    labels:
+      - "traefik.http.routers.factory.entrypoints=web"
+      - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"     
     ports:
       - "80:80"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
-  postgres:
-    container_name: postgres
-    restart: always
-    image: postgres:10.4-alpine
-    build:
-      context: ./joegatt.net-db
+  
+  factory:
+    container_name: factory.joegatt.net
+    build: 
+      context: ./joegatt.net-factory
     volumes:
-      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+      - ./tmp/npm:/root/.npm:z
+      - ./joegatt.net-factory/src:/usr/src/app/src:z
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
+      - "traefik.http.routers.factory.entrypoints=web"
+    command: node ./dist/index.js
     environment:
-      POSTGRES_USER: ${JOEGATTNET_USER}
-      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
-      POSTGRES_DB: ${JOEGATTNET_DB}
-    expose:
-      - 5432
-    ports:
-      - 5432
-    networks:
-      - psql-pgql
-      - postgres
+      - NODE_ENV=production
+    restart: always
     
   graphql:
     container_name: graphql
@@ -48,11 +50,11 @@ services:
       - postgres
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.graphql.rule=Host(`v4.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
+      - "traefik.port=5000"
       - "traefik.http.routers.graphql.entrypoints=web"
     networks:
       - psql-pgql
-      - web
     ports:
       - 5000:5000
     command:
@@ -73,25 +75,48 @@ services:
         "unregistered"
       ]
 
-  factory:
-    container_name: factory.joegatt.net
-    build: 
-      context: ./joegatt.net-factory
-    volumes:
-      - ./tmp/npm:/root/.npm:z
-      - ./joegatt.net-factory/src:/usr/src/app/src:z
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    networks:
+      - postgres
+    ports:
+      - "${PGADMIN_PORT:-5050}:5050"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
-      - "traefik.http.routers.factory.entrypoints=web"
-    command: node ./dist/index.js
-    environment:
-      - NODE_ENV=production
-    restart: always
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.port=5050"
+    restart: unless-stopped
 
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:10.4-alpine
+    build:
+      context: ./joegatt.net-db
+    volumes:
+      - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
+    expose:
+      - 5432
+    ports:
+      - 5432
+    networks:
+      - psql-pgql
+      - postgres
+  
   v3joegattnet:
     container_name: v3.joegatt.net
-    build: 
+    build:
       context: ./joegatt.net-v3-html
     volumes:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
@@ -104,8 +129,8 @@ networks:
   psql-pgql:
   postgres:
     driver: bridge
-  web:
 
 volumes:
+  pgadmin:
   postgres:
       
