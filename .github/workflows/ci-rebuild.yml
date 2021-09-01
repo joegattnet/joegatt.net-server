@@ -1,0 +1,26 @@
+name: CI-Rebuild
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Rebuild
+    runs-on: ubuntu-latest
+    steps:
+    - name: Repository checkout
+      uses: actions/checkout@v2
+    - name: Connects to VPS via SSH
+      uses: appleboy/ssh-action@v0.1.3
+      with:
+        host: ${{ secrets.DEPLOYER_CI_IP_ADDRESS }}
+        port: ${{ secrets.DEPLOYER_CI_PORT }}
+        username: ${{ secrets.DEPLOYER_CI_USER_NAME }}
+        key: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY }}
+        passphrase: ${{ secrets.DEPLOYER_CI_PRIVATE_KEY_PASSWORD }}
+        script: |
+          cd joegatt.net-server
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa_deploykey_unsigned
+          git pull
+          docker-compose -f docker-compose-prod.yml up -d --build
