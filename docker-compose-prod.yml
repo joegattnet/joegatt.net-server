@@ -52,7 +52,7 @@ services:
       - "traefik.enable=true"
       # - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
       - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
-      - "traefik.port=5000"
+      # - "traefik.port=5000"
       - "traefik.http.routers.graphql.entrypoints=web"
     networks:
       - psql-pgql
@@ -86,13 +86,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     networks:
       - postgres
-    # ports:
-    #   - "${PGADMIN_PORT:-5050}:5050"
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
-      - "traefik.port=5050"
+      - "traefik.port=80"
     restart: unless-stopped
 
   postgres:
