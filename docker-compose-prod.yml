@@ -86,13 +86,14 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     networks:
       - postgres
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
+      - web
+    # ports:
+    #   - "${PGADMIN_PORT:-5050}:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
       - "traefik.http.routers.pgadmin.entrypoints=web"
-      - "traefik.port=80"
+      - "traefik.port=5050"
     restart: unless-stopped
 
   postgres:
@@ -129,6 +130,8 @@ services:
 networks:
   psql-pgql:
   postgres:
+    driver: bridge
+  web:
     driver: bridge
 
 volumes:
