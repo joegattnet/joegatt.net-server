@@ -11,6 +11,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
       - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
