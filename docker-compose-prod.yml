@@ -66,6 +66,9 @@ services:
 #      - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
+    networks:
+      - backend
+      - traefik-global-proxy
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
@@ -93,6 +96,7 @@ services:
       - "traefik.http.routers.graphql.tls.certresolver=myresolver"
     networks:
       - backend
+      - traefik-global-proxy
     # ports:
     #   - 5000:5000
     command:
@@ -245,8 +249,8 @@ services:
     depends_on:
       - postgres
     networks:
-      - traefik-global-proxy
       - backend
+      - traefik-global-proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.simple-dba.rule=Host(`pgadmin.joegatt.net`)" # domain to expose on
