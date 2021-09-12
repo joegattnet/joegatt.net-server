@@ -92,7 +92,7 @@ services:
       - "traefik.http.routers.graphql.entrypoints=websecure"
       - "traefik.http.routers.graphql.tls.certresolver=myresolver"
     networks:
-      - psql-pgql
+      - backend
     # ports:
     #   - 5000:5000
     command:
@@ -158,6 +158,7 @@ services:
     image: postgres:12
     volumes:
       - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
+      - dbdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${JOEGATTNET_DB}
       - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
