@@ -28,7 +28,7 @@ services:
     container_name: "traefik"
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure=true"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
@@ -37,6 +37,12 @@ services:
       - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
+    labels:
+      - "traefik.http.routers.factory.entrypoints=websecure"
+      - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
     ports:
       - "443:443"
       - "8080:8080"
@@ -252,7 +258,7 @@ services:
       - traefik-global-proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.simple-dba.rule=Host(`pgadmin.joegatt.net`)" # domain to expose on
+      - "traefik.http.routers.simple-dba.rule=Host(`adminer.joegatt.net`)" # domain to expose on
       - "traefik.http.routers.simple-dba.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
       - "traefik.http.routers.simple-dba.tls.certresolver=letsencrypt" # if you named your cert resolver differently than letsencrypt, substitute it here!
       # - "traefik.http.middlewares.db-ipwhitelist.ipwhitelist.sourcerange=12.34.56.78" # uncomment if you will secure db admin with an IP whitelist and add your comma-separated IP addresses
