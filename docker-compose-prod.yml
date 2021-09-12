@@ -153,6 +153,7 @@ services:
   #     - psql-pgql
   #     - postgres
 
+  postgres:
     container_name: postgres
     image: postgres:12
     volumes:
