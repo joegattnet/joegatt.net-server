@@ -31,18 +31,22 @@ services:
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-global-proxy"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.tlsChallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.http.routers.factory.entrypoints=websecure"
-      - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+    networks:
+      - traefik-global-proxy
     ports:
       - "443:443"
       - "8080:8080"
@@ -57,7 +61,7 @@ services:
   #     - "traefik.enable=true"
   #     - "traefik.http.routers.whoami.rule=Host(`whoami.example.com`)"
   #     - "traefik.http.routers.whoami.entrypoints=websecure"
-  #     - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+  #     - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
 
   factory:
     container_name: factory.joegatt.net
@@ -99,7 +103,7 @@ services:
       - "traefik.port=5000"
       # - "traefik.http.routers.graphql.entrypoints=web"
       - "traefik.http.routers.graphql.entrypoints=websecure"
-      - "traefik.http.routers.graphql.tls.certresolver=myresolver"
+      - "traefik.http.routers.graphql.tls.certresolver=letsencrypt"
     networks:
       - backend
       - traefik-global-proxy
@@ -187,7 +191,7 @@ services:
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       # - "traefik.http.routers.v3joegattnet.entrypoints=web"
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
-      - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
+      - "traefik.http.routers.v3joegattnet.tls.certresolver=letsencrypt"
 
 # networks:
 #   psql-pgql:
