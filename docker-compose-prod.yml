@@ -71,7 +71,7 @@ services:
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
 #      - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.factory.entrypoints=websecure"
-      - "traefik.http.routers.factory.tls.certresolver=myresolver"
+      - "traefik.http.routers.factory.tls.certresolver=letsencrypt"
     networks:
       - backend
       - traefik-global-proxy
@@ -96,7 +96,7 @@ services:
       - "traefik.enable=true"
       # - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
       - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
-      # - "traefik.port=5000"
+      - "traefik.port=5000"
       # - "traefik.http.routers.graphql.entrypoints=web"
       - "traefik.http.routers.graphql.entrypoints=websecure"
       - "traefik.http.routers.graphql.tls.certresolver=myresolver"
