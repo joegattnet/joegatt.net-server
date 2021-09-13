@@ -31,19 +31,27 @@ services:
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-global-proxy"
+      - "--entryPoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.tlsChallenge=true"
+      # - --certificatesResolvers.letsencrypt.acme.httpChallenge=true
+      # - --certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=web
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.http.routers.factory.entrypoints=websecure"
-      - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=web,websecure"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+    networks:
+      - traefik-global-proxy
     ports:
+      - "80:80"
       - "443:443"
       - "8080:8080"
     volumes:
@@ -56,8 +64,8 @@ services:
   #   labels:
   #     - "traefik.enable=true"
   #     - "traefik.http.routers.whoami.rule=Host(`whoami.example.com`)"
-  #     - "traefik.http.routers.whoami.entrypoints=websecure"
-  #     - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+  #     - "traefik.http.routers.whoami.entrypoints=web,websecure"
+  #     - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
 
   factory:
     container_name: factory.joegatt.net
@@ -70,8 +78,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
 #      - "traefik.http.routers.factory.entrypoints=web"
-      - "traefik.http.routers.factory.entrypoints=websecure"
-      - "traefik.http.routers.factory.tls.certresolver=myresolver"
+      - "traefik.http.routers.factory.entrypoints=web,websecure"
+      - "traefik.http.routers.factory.tls.certresolver=letsencrypt"
     networks:
       - backend
       - traefik-global-proxy
@@ -96,10 +104,10 @@ services:
       - "traefik.enable=true"
       # - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
       - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
-      # - "traefik.port=5000"
+      - "traefik.port=5000"
       # - "traefik.http.routers.graphql.entrypoints=web"
-      - "traefik.http.routers.graphql.entrypoints=websecure"
-      - "traefik.http.routers.graphql.tls.certresolver=myresolver"
+      - "traefik.http.routers.graphql.entrypoints=web,websecure"
+      - "traefik.http.routers.graphql.tls.certresolver=letsencrypt"
     networks:
       - backend
       - traefik-global-proxy
@@ -186,8 +194,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       # - "traefik.http.routers.v3joegattnet.entrypoints=web"
-      - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
-      - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
+      - "traefik.http.routers.v3joegattnet.entrypoints=web,websecure"
+      - "traefik.http.routers.v3joegattnet.tls.certresolver=letsencrypt"
 
 # networks:
 #   psql-pgql:
@@ -212,7 +220,7 @@ services:
   #   labels:
   #     - "traefik.enable=true"
   #     - "traefik.http.routers.simple-fe.rule=Host(`simple.mydomain.com`)" # domain to expose on
-  #     - "traefik.http.routers.simple-fe.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
+  #     - "traefik.http.routers.simple-fe.entrypoints=web,websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
   #     - "traefik.http.routers.simple-fe.tls.certresolver=letsencrypt" # if you named your cert resolver differently than letsencrypt, substitute it here!
 
   # api:
@@ -232,7 +240,7 @@ services:
   #   labels:
   #     - "traefik.enable=true"
   #     - "traefik.http.routers.simple-be.rule=Host(`api.simple.mydomain.com`)" # domain to expose on
-  #     - "traefik.http.routers.simple-be.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
+  #     - "traefik.http.routers.simple-be.entrypoints=web,websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
   #     - "traefik.http.routers.simple-be.tls.certresolver=letsencrypt" # if you named your cert resolver differently than letsencrypt, substitute it here!
 
   # db:
@@ -259,7 +267,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.simple-dba.rule=Host(`adminer.joegatt.net`)" # domain to expose on
-      - "traefik.http.routers.simple-dba.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
+      - "traefik.http.routers.simple-dba.entrypoints=web,websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
       - "traefik.http.routers.simple-dba.tls.certresolver=letsencrypt" # if you named your cert resolver differently than letsencrypt, substitute it here!
       # - "traefik.http.middlewares.db-ipwhitelist.ipwhitelist.sourcerange=12.34.56.78" # uncomment if you will secure db admin with an IP whitelist and add your comma-separated IP addresses
       # - "traefik.http.routers.simple-dba.middlewares=dbauth,db-ipwhitelist" # uncomment if you will use both auth and ip whitelist and comment below line
