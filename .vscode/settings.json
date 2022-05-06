@@ -2,5 +2,5 @@
   "jest.rootPath": "joegatt.net-gardeners",
   "jest.enableInlineErrorMessages": true,
   "jest.showCoverageOnLoad": true,
-  "workbench.colorTheme": "GitHub Light"
+  "workbench.colorTheme": "GitHub Dark"
 }
