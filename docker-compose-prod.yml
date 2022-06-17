@@ -23,41 +23,63 @@ services:
   #   volumes:
   #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
+  # traefik:
+  #   image: "traefik:v2.7"
+  #   container_name: "traefik"
+  #   command:
+  #     - "--log.level=DEBUG"
+  #     - "--api.dashboard=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.websecure.address=:443"
+  #     - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+  #     #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+  #     - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
+  #     - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  #     - "--pilot.token=${TRAEFIK_PILOT_KEY}"
+  #   labels:
+  #     - "traefik.http.routers.factory.entrypoints=websecure"
+  #     - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
+  #     - "traefik.http.routers.api.service=api@internal"
+  #     - "traefik.http.routers.api.middlewares=auth"
+  #     - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+  #   ports:
+  #     - "443:443"
+  #     - "8080:8080"
+  #   volumes:
+  #     - "./letsencrypt:/letsencrypt"
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   traefik:
-    image: "traefik:v2.7"
+    image: "traefik:v2.4.13"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=ERROR"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.http.routers.factory.entrypoints=websecure"
+      - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"
     ports:
-      - "443:443"
+      - "80:80"
       - "8080:8080"
     volumes:
-      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  whoami:
-    image: "traefik/whoami"
-    container_name: "simple-service"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.example.com`)"
-      - "traefik.http.routers.whoami.entrypoints=websecure"
-      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+  # whoami:
+  #   image: "traefik/whoami"
+  #   container_name: "simple-service"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.whoami.rule=Host(`whoami.example.com`)"
+  #     - "traefik.http.routers.whoami.entrypoints=websecure"
+  #     - "traefik.http.routers.whoami.tls.certresolver=myresolver"
 
   factory:
     container_name: factory.joegatt.net
