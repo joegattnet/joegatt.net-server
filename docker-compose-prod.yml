@@ -1,54 +1,54 @@
 version: "3.3"
 
 services:
-  # traefik:
-  #   image: "traefik:v2.4.13"
-  #   container_name: "traefik"
-  #   command:
-  #     - "--log.level=ERROR"
-  #     - "--api.dashboard=true"
-  #     - "--providers.docker=true"
-  #     - "--providers.docker.exposedbydefault=false"
-  #     - "--entrypoints.web.address=:80"
-  #     - "--pilot.token=${TRAEFIK_PILOT_KEY}"
-  #   labels:
-  #     - "traefik.http.routers.factory.entrypoints=web"
-  #     - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
-  #     - "traefik.http.routers.api.service=api@internal"
-  #     - "traefik.http.routers.api.middlewares=auth"
-  #     - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"
-  #   ports:
-  #     - "80:80"
-  #     - "8080:8080"
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
   traefik:
-    image: "traefik:v2.5"
+    image: "traefik:v2.7"
     container_name: "traefik"
     command:
-      #- "--log.level=DEBUG"
+      - "--log.level=ERROR"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.http.routers.factory.entrypoints=websecure"
+      - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"
     ports:
-      - "443:443"
+      - "80:80"
       - "8080:8080"
     volumes:
-      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  # traefik:
+  #   image: "traefik:v2.5"
+  #   container_name: "traefik"
+  #   command:
+  #     #- "--log.level=DEBUG"
+  #     - "--api.dashboard=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.websecure.address=:443"
+  #     - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+  #     #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+  #     - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
+  #     - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  #     - "--pilot.token=${TRAEFIK_PILOT_KEY}"
+  #   labels:
+  #     - "traefik.http.routers.factory.entrypoints=websecure"
+  #     - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
+  #     - "traefik.http.routers.api.service=api@internal"
+  #     - "traefik.http.routers.api.middlewares=auth"
+  #     - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+  #   ports:
+  #     - "443:443"
+  #     - "8080:8080"
+  #   volumes:
+  #     - "./letsencrypt:/letsencrypt"
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   # whoami:
   #   image: "traefik/whoami"
@@ -69,7 +69,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
-#      - "traefik.http.routers.factory.entrypoints=web"
+      #      - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     networks:
@@ -189,18 +189,18 @@ services:
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
 
-# networks:
-#   psql-pgql:
-#   postgres:
-#     driver: bridge
-#   web:
-#     driver: bridge
+  # networks:
+  #   psql-pgql:
+  #   postgres:
+  #     driver: bridge
+  #   web:
+  #     driver: bridge
 
-# volumes:
-#   pgadmin:
-#   postgres:
+  # volumes:
+  #   pgadmin:
+  #   postgres:
 
-###############################################################################################
+  ###############################################################################################
 
   # frontend:
   #   container_name: simple_prod_frontend
@@ -269,7 +269,7 @@ services:
 volumes:
   dbdata:
 
+
 networks:
-  traefik-global-proxy:
-    # external: true
+  traefik-global-proxy: # external: true
   backend:
