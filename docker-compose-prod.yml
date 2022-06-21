@@ -47,8 +47,6 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    networks:
-      - traefik-global-proxy
 
   # whoami:
   #   image: "traefik/whoami"
@@ -75,6 +73,7 @@ services:
     networks:
       - backend
       - traefik-global-proxy
+    command: node ./dist/index.js
     environment:
       - NODE_ENV=production
       - POSTGRES_DB=${JOEGATTNET_DB}
