@@ -1,6 +1,7 @@
 {
-  "jest.rootPath": "joegatt.net-gardeners",
-  "jest.enableInlineErrorMessages": true,
-  "jest.showCoverageOnLoad": true,
-  "workbench.colorTheme": "GitHub Dark"
+  "workbench.colorTheme": "GitHub Dark",
+  "editor.wrappingIndent": "same",
+  "editor.wrappingStrategy": "simple",
+  "html.format.wrapAttributes": "auto",
+  "editor.wordWrap": "off"
 }
