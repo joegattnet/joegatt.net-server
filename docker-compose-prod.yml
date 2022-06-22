@@ -261,8 +261,8 @@ services:
       - "traefik.http.routers.simple-dba.tls.certresolver=letsencrypt" # if you named your cert resolver differently than letsencrypt, substitute it here!
       # - "traefik.http.middlewares.db-ipwhitelist.ipwhitelist.sourcerange=12.34.56.78" # uncomment if you will secure db admin with an IP whitelist and add your comma-separated IP addresses
       # - "traefik.http.routers.simple-dba.middlewares=dbauth,db-ipwhitelist" # uncomment if you will use both auth and ip whitelist and comment below line
-      - "traefik.http.routers.simple-dba.middlewares=dbauth"
-      - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
+      # - "traefik.http.routers.simple-dba.middlewares=dbauth"
+      # - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
 
 volumes:
   dbdata:
