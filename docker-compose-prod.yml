@@ -32,15 +32,15 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=${{secrets.ADMIN_EMAIL}}"
+      - "--certificatesresolvers.myresolver.acme.email=${{ secrets.ADMIN_EMAIL }}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      - "--pilot.token=${{secrets.TRAEFIK_PILOT_KEY}}"
+      - "--pilot.token=${{ secrets.TRAEFIK_PILOT_KEY }}"
     labels:
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${{secrets.ADMINER_USER_PASSWORD}}"
+      - "traefik.http.middlewares.auth.basicauth.users=${{ secrets.ADMINER_USER_PASSWORD }}"
     ports:
       - "443:443"
       - "8080:8080"
