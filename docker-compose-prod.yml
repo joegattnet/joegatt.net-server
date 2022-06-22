@@ -187,17 +187,6 @@ services:
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
 
-  # networks:
-  #   psql-pgql:
-  #   postgres:
-  #     driver: bridge
-  #   web:
-  #     driver: bridge
-
-  # volumes:
-  #   pgadmin:
-  #   postgres:
-
   ###############################################################################################
 
   # frontend:
