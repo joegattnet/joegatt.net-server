@@ -8,13 +8,13 @@ services:
   #     - "--providers.docker=true"
   #     - "--providers.docker.exposedbydefault=false"
   #     - "--entrypoints.web.address=:80"
-  #     - "--pilot.token=${{ secrets.TRAEFIK_PILOT_KEY }}"
+  #     - "--pilot.token=${TRAEFIK_PILOT_KEY}"
   #   labels:
   #     - "traefik.http.routers.factory.entrypoints=web"
   #     - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
   #     - "traefik.http.routers.api.service=api@internal"
   #     - "traefik.http.routers.api.middlewares=auth"
-  #     - "traefik.http.middlewares.auth.basicauth.users=admin:${{ secrets.TRAEFIK_PASSWORD }}"
+  #     - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"
   #   ports:
   #     - "80:80"
   #     - "8080:8080"
@@ -32,15 +32,15 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=admin@joegatt.net"
+      - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      - "--pilot.token=${{ secrets.TRAEFIK_PILOT_KEY }}"
+      - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${{ secrets.ADMINER_USER_PASSWORD }}"
+      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
     ports:
       - "443:443"
       - "8080:8080"
@@ -76,9 +76,9 @@ services:
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
-      - POSTGRES_DB=${{ secrets.JOEGATTNET_DB }}
-      - POSTGRES_PASSWORD=${{ secrets.JOEGATTNET_PASSWORD }}
-      - POSTGRES_USER=${{ secrets.JOEGATTNET_USER }}
+      - POSTGRES_DB=${JOEGATTNET_DB}
+      - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
+      - POSTGRES_USER=${JOEGATTNET_USER}
     restart: always
 
   graphql:
@@ -86,7 +86,7 @@ services:
     restart: always
     image: graphile/postgraphile
     environment:
-      DATABASE_URL: postgres://${{ secrets.JOEGATTNET_USER }}:${{ secrets.JOEGATTNET_PASSWORD }}@postgres:5432/${{ secrets.JOEGATTNET_DB }}
+      DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
       PORT: 5432
     depends_on:
       - postgres
@@ -108,7 +108,7 @@ services:
         "-w",
         "--cors",
         "-c",
-        "postgres://${{ secrets.JOEGATTNET_USER }}:${{ secrets.JOEGATTNET_PASSWORD }}@postgres:5432/${{ secrets.JOEGATTNET_DB }}",
+        "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
         "-s",
         "api",
         "--extended-errors",
@@ -127,13 +127,13 @@ services:
   #   depends_on:
   #     - postgres
   #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${{ secrets.PGADMIN_EMAIL:-pgadmin4@pgadmin.org }}
-  #     PGADMIN_DEFAULT_PASSWORD: ${{ secrets.PGADMIN_PASSWORD:-admin }}
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
   #   networks:
   #     - postgres
   #     - web
   #   # ports:
-  #   #   - "${{ secrets.PGADMIN_PORT:-5050 }}:80"
+  #   #   - "${PGADMIN_PORT:-5050}:80"
   #   labels:
   #     - "traefik.enable=true"
   #     - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
@@ -150,9 +150,9 @@ services:
   #   volumes:
   #     - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
   #   environment:
-  #     POSTGRES_USER: ${{ secrets.JOEGATTNET_USER }}
-  #     POSTGRES_PASSWORD: ${{ secrets.JOEGATTNET_PASSWORD }}
-  #     POSTGRES_DB: ${{ secrets.JOEGATTNET_DB }}
+  #     POSTGRES_USER: ${JOEGATTNET_USER}
+  #     POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+  #     POSTGRES_DB: ${JOEGATTNET_DB}
   #   expose:
   #     - 5432
   #   ports:
@@ -168,9 +168,9 @@ services:
       - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
       - dbdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${{ secrets.JOEGATTNET_DB }}
-      - POSTGRES_PASSWORD=${{ secrets.JOEGATTNET_PASSWORD }}
-      - POSTGRES_USER=${{ secrets.JOEGATTNET_USER }}
+      - POSTGRES_DB=${JOEGATTNET_DB}
+      - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
+      - POSTGRES_USER=${JOEGATTNET_USER}
     networks:
       - backend
 
@@ -182,7 +182,7 @@ services:
       - ./joegatt.net-v3-html:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
+      - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `${TEST_DNS}`, `joegatt.net`, `www.joegatt.net`)"
       # - "traefik.http.routers.v3joegattnet.entrypoints=web"
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
@@ -251,7 +251,7 @@ services:
       # - "traefik.http.middlewares.db-ipwhitelist.ipwhitelist.sourcerange=12.34.56.78" # uncomment if you will secure db admin with an IP whitelist and add your comma-separated IP addresses
       # - "traefik.http.routers.simple-dba.middlewares=dbauth,db-ipwhitelist" # uncomment if you will use both auth and ip whitelist and comment below line
       - "traefik.http.routers.simple-dba.middlewares=dbauth"
-      - "traefik.http.middlewares.dbauth.basicauth.users=${{ secrets.ADMINER_USER_PASSWORD }}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
+      - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
 
 volumes:
   dbdata:
