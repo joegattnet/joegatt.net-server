@@ -46,6 +46,8 @@ services:
       - POSTGRES_DB=${JOEGATTNET_DB}
       - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
       - POSTGRES_USER=${JOEGATTNET_USER}
+    ports:
+      - "3000:3000"
     restart: always
 
   graphql:
