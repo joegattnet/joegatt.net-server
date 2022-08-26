@@ -1,33 +1,32 @@
+version: "3.3"
+
 services:
+
   traefik:
-    image: "traefik:v2.5"
+    image: "traefik:v2.4.13"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=ERROR"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.http.routers.factory.entrypoints=websecure"
+      - "traefik.http.routers.factory.entrypoints=web"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:${TRAEFIK_PASSWORD}"     
     ports:
-      - "443:443"
+      - "80:80"
       - "8080:8080"
     volumes:
-      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
+  
   factory:
     container_name: factory.joegatt.net
-    build:
+    build: 
       context: ./joegatt.net-factory
     volumes:
       - ./tmp/npm:/root/.npm:z
@@ -35,19 +34,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`, `www.joegatt.org`)"
-      - "traefik.http.routers.factory.entrypoints=websecure"
-      - "traefik.http.routers.factory.tls.certresolver=myresolver"
-    networks:
-      - backend
-      - traefik-global-proxy
+      - "traefik.http.routers.factory.entrypoints=web"
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
-      - POSTGRES_DB=${JOEGATTNET_DB}
-      - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
-      - POSTGRES_USER=${JOEGATTNET_USER}
     restart: always
-
+    
   graphql:
     container_name: graphql
     restart: always
@@ -59,12 +51,14 @@ services:
       - postgres
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
-      - "traefik.http.routers.graphql.entrypoints=websecure"
-      - "traefik.http.routers.graphql.tls.certresolver=myresolver"
+      # - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`)"
+      # - "traefik.port=5000"
+      - "traefik.http.routers.graphql.entrypoints=web"
     networks:
-      - backend
-      - traefik-global-proxy
+      - psql-pgql
+    # ports:
+    #   - 5000:5000
     command:
       [
         "-w",
@@ -83,19 +77,46 @@ services:
         "unregistered"
       ]
 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    networks:
+      - postgres
+      - web
+    # ports:
+    #   - "${PGADMIN_PORT:-5050}:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.joegatt.net`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.port=5050"
+    restart: unless-stopped
+
   postgres:
     container_name: postgres
-    image: postgres:12
+    restart: always
+    image: postgres:10.4-alpine
+    build:
+      context: ./joegatt.net-db
     volumes:
       - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
-      - dbdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${JOEGATTNET_DB}
-      - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
-      - POSTGRES_USER=${JOEGATTNET_USER}
+      POSTGRES_USER: ${JOEGATTNET_USER}
+      POSTGRES_PASSWORD: ${JOEGATTNET_PASSWORD}
+      POSTGRES_DB: ${JOEGATTNET_DB}
+    expose:
+      - 5432
+    ports:
+      - 5432
     networks:
-      - backend
-
+      - psql-pgql
+      - postgres
+  
   v3joegattnet:
     container_name: v3.joegatt.net
     build:
@@ -105,29 +126,16 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
-      - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
-      - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
-
-  dbadm:
-    container_name: simple_prod_db_admin
-    image: adminer
-    depends_on:
-      - postgres
-    networks:
-      - backend
-      - traefik-global-proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.simple-dba.rule=Host(`adminer.joegatt.net`)" # domain to expose on
-      - "traefik.http.routers.simple-dba.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
-      - "traefik.http.routers.simple-dba.tls.certresolver=letsencrypt" # if you named your cert resolver differently than letsencrypt, substitute it here!
-      - "traefik.http.routers.simple-dba.middlewares=dbauth"
-      - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
-
-volumes:
-  dbdata:
-
+      - "traefik.http.routers.v3joegattnet.entrypoints=web"
 
 networks:
-  traefik-global-proxy: # external: true
-  backend:
+  psql-pgql:
+  postgres:
+    driver: bridge
+  web:
+    driver: bridge
+
+volumes:
+  pgadmin:
+  postgres:
+      
