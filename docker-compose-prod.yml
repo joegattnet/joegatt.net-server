@@ -13,7 +13,6 @@ services:
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
