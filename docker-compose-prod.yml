@@ -100,8 +100,8 @@ services:
       - POSTGRES_DB=${JOEGATTNET_DB}
       - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
       - POSTGRES_USER=${JOEGATTNET_USER}
-    networks:
-      - backend
+    # networks:
+    #   - backend
 
   v3joegattnet:
     container_name: v3.joegatt.net
