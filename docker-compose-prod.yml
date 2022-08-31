@@ -120,9 +120,9 @@ services:
     image: adminer
     depends_on:
       - postgres
-    networks:
-      - backend
-      - traefik-global-proxy
+    # networks:
+    #   - backend
+    #   - traefik-global-proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.simple-dba.rule=Host(`adminer.joegatt.net`)" # domain to expose on
