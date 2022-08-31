@@ -14,11 +14,13 @@ services:
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
     ports:
       - "443:443"
+      - "80:80"
       - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
