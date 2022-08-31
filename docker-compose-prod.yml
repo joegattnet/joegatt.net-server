@@ -43,9 +43,9 @@ services:
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`)"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
-    networks:
-      - backend
-      - traefik-global-proxy
+    # networks:
+    #   - backend
+    #   - traefik-global-proxy
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
@@ -113,8 +113,6 @@ services:
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
-    networks:
-      - traefik-global-proxy
 
   dbadm:
     container_name: simple_prod_db_admin
