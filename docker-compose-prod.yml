@@ -8,19 +8,23 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.myresolver.acme.email=${ADMIN_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_ACCOUNT_EMAIL_ADDRESS}
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
     ports:
       - "443:443"
-      - "80:80"
       - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
