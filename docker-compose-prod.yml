@@ -118,7 +118,7 @@ services:
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
 
   dbadmin:
-    container_name: simple_prod_db_admin
+    container_name: dbadmin
     image: adminer
     depends_on:
       - postgres
