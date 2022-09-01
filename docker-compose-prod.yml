@@ -5,7 +5,7 @@ services:
     command:
       - "--log.level=DEBUG"
       - "--api.dashboard=true"
-      - "--api.insecure=true"
+      - "--api.insecure=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
@@ -45,9 +45,9 @@ services:
       - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`)"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
-    networks:
-      - backend
-      - traefik-global-proxy
+    # networks:
+    #   - backend
+    #   - traefik-global-proxy
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
@@ -72,9 +72,9 @@ services:
       - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
       - "traefik.http.routers.graphql.entrypoints=websecure"
       - "traefik.http.routers.graphql.tls.certresolver=myresolver"
-    networks:
-      - backend
-      - traefik-global-proxy
+    # networks:
+    #   - backend
+    #   - traefik-global-proxy
     command:
       [
         "-w",
@@ -103,8 +103,8 @@ services:
       - POSTGRES_DB=${JOEGATTNET_DB}
       - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
       - POSTGRES_USER=${JOEGATTNET_USER}
-    networks:
-      - backend
+    # networks:
+    #   - backend
     ports:
       - "5432:5432"
 
@@ -119,17 +119,17 @@ services:
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
-    networks:
-      - traefik-global-proxy
+    # networks:
+    #   - traefik-global-proxy
 
   dbadmin:
     container_name: dbadmin
     image: adminer
     depends_on:
       - postgres
-    networks:
-      - backend
-      - traefik-global-proxy
+    # networks:
+    #   - backend
+    #   - traefik-global-proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`)" # domain to expose on
@@ -141,8 +141,7 @@ services:
 volumes:
   dbdata:
 
-
-networks:
-  traefik-global-proxy:
-    external: true
-  backend:
+    # networks:
+    #   traefik-global-proxy:
+    #     external: true
+    #   backend:
