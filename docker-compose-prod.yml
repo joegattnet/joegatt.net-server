@@ -15,11 +15,11 @@ services:
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.routers.api.tls.certresolver=myresolver"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_ACCOUNT_EMAIL_ADDRESS}
@@ -116,7 +116,7 @@ services:
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
 
-  dbadm:
+  dbadmin:
     container_name: simple_prod_db_admin
     image: adminer
     depends_on:
@@ -126,10 +126,10 @@ services:
     #   - traefik-global-proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.simple-dba.rule=Host(`adminer.joegatt.net`)" # domain to expose on
-      - "traefik.http.routers.simple-dba.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
-      - "traefik.http.routers.simple-dba.tls.certresolver=myresolver" # if you named your cert resolver differently than letsencrypt, substitute it here!
-      # - "traefik.http.routers.simple-dba.middlewares=dbauth"
+      - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`)" # domain to expose on
+      - "traefik.http.routers.dbadmin.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
+      - "traefik.http.routers.dbadmin.tls.certresolver=myresolver" # if you named your cert resolver differently than letsencrypt, substitute it here!
+      # - "traefik.http.routers.dbadmin.middlewares=dbauth"
       # - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
 
 volumes:
