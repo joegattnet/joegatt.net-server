@@ -40,7 +40,7 @@ services:
       - ./joegatt.net-factory/src:/usr/src/app/src:z
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`)" # TEST RE-ADDING names
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`)"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     # TEST RE-ADDING THIS
@@ -134,7 +134,6 @@ services:
 volumes:
   dbdata:
 
-
-networks:
-  traefik-global-proxy: # external: true
-  backend:
+    # networks:
+    #   traefik-global-proxy: # external: true
+    #   backend:
