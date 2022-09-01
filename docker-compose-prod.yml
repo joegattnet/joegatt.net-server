@@ -14,6 +14,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`traefik.joegatt.net`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
@@ -40,7 +41,7 @@ services:
       - ./joegatt.net-factory/src:/usr/src/app/src:z
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `joegatt.org`)"
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`)"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     # TEST RE-ADDING THIS
