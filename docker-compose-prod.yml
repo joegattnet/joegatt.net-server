@@ -120,6 +120,8 @@ services:
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
+    networks:
+      - host
 
   dbadmin:
     container_name: dbadmin
@@ -127,6 +129,7 @@ services:
     depends_on:
       - postgres
     networks:
+      - host
       - backend
     labels:
       - "traefik.enable=true"
