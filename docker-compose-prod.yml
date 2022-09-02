@@ -26,6 +26,8 @@ services:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+    networks:
+      - frontend
     ports:
       - "443:443"
       - "8080:8080"
@@ -47,6 +49,7 @@ services:
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     networks:
       - backend
+      - frontend
     command: node ./dist/index.js
     environment:
       - NODE_ENV=production
@@ -139,3 +142,4 @@ volumes:
 
 networks:
   backend:
+  frontend:
