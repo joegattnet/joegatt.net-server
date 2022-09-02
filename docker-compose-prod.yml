@@ -4,7 +4,7 @@ services:
     container_name: "traefik"
     command:
       - "--log.level=DEBUG"
-      - "--api.dashboard=false"
+      - "--api.dashboard=true"
       - "--api.insecure=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -20,8 +20,8 @@ services:
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik.service=api@internal"
-      # - "traefik.http.routers.traefik.middlewares=auth"
-      # - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+      - "traefik.http.routers.traefik.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
