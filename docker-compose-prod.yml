@@ -131,6 +131,7 @@ services:
       - postgres
     networks:
       - backend
+      - frontend
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`)" # domain to expose on
