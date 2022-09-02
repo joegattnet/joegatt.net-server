@@ -98,7 +98,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:12
+    image: postgres:10
     volumes:
       - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
       - dbdata:/var/lib/postgresql/data
