@@ -4,6 +4,7 @@ services:
     container_name: "traefik"
     command:
       - "--log.level=DEBUG"
+      - "--api=true"
       - "--api.dashboard=true"
       - "--api.insecure=false"
       - "--providers.docker=true"
