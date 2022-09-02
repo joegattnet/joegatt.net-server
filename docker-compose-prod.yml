@@ -49,7 +49,7 @@ services:
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     networks:
-      # - backend
+      - backend
       - frontend
     command: node ./dist/index.js
     environment:
