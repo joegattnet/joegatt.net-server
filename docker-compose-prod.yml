@@ -73,7 +73,8 @@ services:
       - "traefik.http.routers.web.tls.certresolver=myresolver"
     networks:
       - frontend
-    command: node ./dist/index.js
+    command: node ./src/index.js
+    # command: node ./dist/index.js
     restart: always
 
   graphql:
