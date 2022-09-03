@@ -59,6 +59,23 @@ services:
       - POSTGRES_USER=${JOEGATTNET_USER}
     restart: always
 
+  web:
+    container_name: web.joegatt.net
+    build:
+      context: ./joegatt.net-web
+    volumes:
+      - ./tmp/npm:/root/.npm:z
+      - ./joegatt.net-web/src:/usr/src/app/src:z
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`v4.joegatt.net`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=myresolver"
+    networks:
+      - frontend
+    command: node ./dist/index.js
+    restart: always
+
   graphql:
     container_name: graphql
     restart: always
