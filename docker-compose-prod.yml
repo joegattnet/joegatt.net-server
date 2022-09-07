@@ -17,7 +17,7 @@ services:
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`, `traefik.joegatt.org`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik.service=api@internal"
@@ -45,7 +45,7 @@ services:
       - ./joegatt.net-factory/src:/usr/src/app/src:z
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`)"
+      - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `factory.joegatt.org`)"
       - "traefik.http.routers.factory.entrypoints=websecure"
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     networks:
@@ -88,7 +88,7 @@ services:
       - postgres
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`) || Host(`graphql.joegatt.net`) && Path(`/graphql`)"
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`, `graphql.joegatt.org`)
       - "traefik.http.routers.graphql.entrypoints=websecure"
       - "traefik.http.routers.graphql.tls.certresolver=myresolver"
     networks:
