@@ -88,7 +88,7 @@ services:
       - postgres
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`, `graphql.joegatt.org`)
+      - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`, `graphql.joegatt.org`)"
       - "traefik.http.routers.graphql.entrypoints=websecure"
       - "traefik.http.routers.graphql.tls.certresolver=myresolver"
     networks:
@@ -153,9 +153,9 @@ services:
       - frontend
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`)" # domain to expose on
-      - "traefik.http.routers.dbadmin.entrypoints=websecure" # if you named your 443 entrypoint differently than webscure, substitute it here!
-      - "traefik.http.routers.dbadmin.tls.certresolver=myresolver" # if you named your cert resolver differently than letsencrypt, substitute it here!
+      - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`, `adminer.joegatt.org`)"
+      - "traefik.http.routers.dbadmin.entrypoints=websecure"
+      - "traefik.http.routers.dbadmin.tls.certresolver=myresolver"
       # - "traefik.http.routers.dbadmin.middlewares=dbauth"
       # - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
 
