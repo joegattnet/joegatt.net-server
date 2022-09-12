@@ -60,15 +60,13 @@ services:
     restart: always
 
   ghost:
-    container_name: ghost.joegatt.net
-    build:
-      context: ./joegatt.net-ghost
-    image: ghost:5.x.x-alpine
-    restart: always
+    container_name: ghost
+    image: ghost:5.8.3
+    ports:
+      - "2368:2368"
     volumes:
-      - ./joegatt.net-ghost/data/ghost/content:/var/lib/ghost/versions/5.x.x/content
-      - ./joegatt.net-ghost/data/ghost/content:/var/lib/ghost/content
-      - ./joegatt.net-ghost/data/ghost/config.json:/var/lib/ghost/config.production.json
+      - .:/var/lib/ghost/content
+      - /etc/localtime:/etc/localtime:ro
     environment:
       url: https://newsletter.joegatt.org
     labels:
@@ -78,8 +76,27 @@ services:
       - "traefik.http.routers.factory.tls.certresolver=myresolver"
     networks:
       - backend
-    ports:
-      - 2368:2368
+    restart: unless-stopped
+
+  # ghost:
+  #   container_name: ghost.joegatt.net
+  #   image: ghost:5.x.x-alpine
+  #   restart: always
+  #   volumes:
+  #     - ./joegatt.net-ghost/data/ghost/content:/var/lib/ghost/versions/5.x.x/content
+  #     - ./joegatt.net-ghost/data/ghost/content:/var/lib/ghost/content
+  #     - ./joegatt.net-ghost/data/ghost/config.json:/var/lib/ghost/config.production.json
+  #   environment:
+  #     url: https://newsletter.joegatt.org
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.factory.rule=Host(`newsletter.joegatt.net`, `ghost.joegatt.net`)"
+  #     - "traefik.http.routers.factory.entrypoints=websecure"
+  #     - "traefik.http.routers.factory.tls.certresolver=myresolver"
+  #   networks:
+  #     - backend
+  #   ports:
+  #     - 2368:2368
 
   web:
     container_name: web.joegatt.net
