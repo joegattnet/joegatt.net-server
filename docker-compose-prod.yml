@@ -59,6 +59,28 @@ services:
       - POSTGRES_USER=${JOEGATTNET_USER}
     restart: always
 
+  ghost:
+    container_name: ghost.joegatt.net
+    build:
+      context: ./joegatt.net-ghost
+    image: ghost:5.x.x-alpine
+    restart: always
+    volumes:
+      - /data/ghost/content:/var/lib/ghost/versions/5.x.x/content
+      - /data/ghost/content:/var/lib/ghost/content
+      - /data/ghost/config.json:/var/lib/ghost/config.production.json
+    environment:
+      url: https://newsletter.joegatt.org
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.factory.rule=Host(`newsletter.joegatt.net`, `ghost.joegatt.net`)"
+      - "traefik.http.routers.factory.entrypoints=websecure"
+      - "traefik.http.routers.factory.tls.certresolver=myresolver"
+    networks:
+      - backend
+    ports:
+      - 2368:2368
+
   web:
     container_name: web.joegatt.net
     build:

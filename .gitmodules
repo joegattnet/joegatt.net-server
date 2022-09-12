@@ -1,15 +1,18 @@
-[submodule "joegatt.net-web"]
-	path = joegatt.net-web
-	url = git@github.com:joegattnet/joegatt.net-web.git
 [submodule "joegatt.net-db"]
 	path = joegatt.net-db
 	url = git@github.com:joegattnet/joegatt.net-db.git
 [submodule "joegatt.net-factory"]
 	path = joegatt.net-factory
 	url = git@github.com:joegattnet/joegatt.net-factory.git
-[submodule "joegatt.net-v3-html"]
-	path = joegatt.net-v3-html
-	url = git@github.com:joegattnet/joegatt.net-v3-html.git
+[submodule "joegatt.net-ghost"]
+	path = joegatt.net-ghost
+	url = git@github.com:joegattnet/joegatt.net-ghost.git
 [submodule "joegatt.net-pantography"]
 	path = joegatt.net-pantography
 	url = git@github.com:joegattnet/joegatt.net-pantography.git
+[submodule "joegatt.net-v3-html"]
+	path = joegatt.net-v3-html
+	url = git@github.com:joegattnet/joegatt.net-v3-html.git
+[submodule "joegatt.net-web"]
+	path = joegatt.net-web
+	url = git@github.com:joegattnet/joegatt.net-web.git
