@@ -66,9 +66,9 @@ services:
     image: ghost:5.x.x-alpine
     restart: always
     volumes:
-      - /data/ghost/content:/var/lib/ghost/versions/5.x.x/content
-      - /data/ghost/content:/var/lib/ghost/content
-      - /data/ghost/config.json:/var/lib/ghost/config.production.json
+      - ./joegatt.net-ghost/data/ghost/content:/var/lib/ghost/versions/5.x.x/content
+      - ./joegatt.net-ghost/data/ghost/content:/var/lib/ghost/content
+      - ./joegatt.net-ghost/data/ghost/config.json:/var/lib/ghost/config.production.json
     environment:
       url: https://newsletter.joegatt.org
     labels:
