@@ -24,3 +24,9 @@ jobs:
           ssh-add ~/.ssh/id_rsa_deploykey_unsigned
           git pull
           docker-compose -f docker-compose-prod.yml up -d --build
+    - name: Notify slack
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: pullreminders/slack-action@master
+      with:
+        args: '{\"channel\":\"C08TQEMC3\",\"text\":\"Action status: ${{ job.status }}\"}'
