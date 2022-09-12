@@ -71,7 +71,7 @@ services:
       url: https://newsletter.joegatt.net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ghost.rule=Host(`newsletter.joegatt.net`, `ghost.joegatt.net`)"
+      - "traefik.http.routers.ghost.rule=Host(`newsletter.joegatt.net`)"
       - "traefik.http.routers.ghost.entrypoints=websecure"
       - "traefik.http.routers.ghost.tls.certresolver=myresolver"
     networks:
