@@ -75,7 +75,7 @@ services:
       - "traefik.http.routers.ghost.entrypoints=websecure"
       - "traefik.http.routers.ghost.tls.certresolver=myresolver"
     networks:
-      - backend
+      - frontend
     restart: unless-stopped
 
   # ghost:
