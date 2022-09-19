@@ -75,6 +75,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       url: https://ghost.joegatt.net
+      mail__transport: "${MAIL_TRANSPORT}"
+      mail__options__host: "${MAIL_HOST}"
+      mail__options__port: "${MAIL_PORT}"
+      mail__options__secureConnection: "${MAIL_SECURE_CONNECTION}"
+      mail__options__auth__user: "${MAIL_USER}"
+      mail__options__auth__pass: "${MAIL_PASSWORD}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ghost.rule=Host(`ghost.joegatt.net`)"
