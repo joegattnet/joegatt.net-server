@@ -30,4 +30,4 @@ jobs:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       uses: pullreminders/slack-action@master
       with:
-        args: '{\"channel\":\"C08TQEMC3\",\"text\":\"Action status: ${{ job.status }}\"}'
+        args: '{\"channel\":\"C08TQEMC3\",\"text\":\"joegatt.net-server action status: ${{ job.status }}\"}'
