@@ -106,7 +106,7 @@ services:
       - frontend
     command: node ./src/index.js
     # command: node ./dist/index.js
-    restart: always
+    # restart: always
 
   graphql:
     container_name: graphql
