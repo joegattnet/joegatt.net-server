@@ -164,8 +164,6 @@ services:
     container_name: v0.aphroconfuso
     build:
       context: ./aphroconfuso-v0
-    ports:
-      - "80:81"
     volumes:
       - ./aphroconfuso-v0:/usr/share/nginx/html
     labels:
