@@ -65,7 +65,7 @@ services:
       - POSTGRES_USER=${JOEGATTNET_USER}
     restart: always
 
-  ghost:
+  aphroconfuso:
     container_name: ghost
     image: ghost:5.8.3
     ports:
@@ -74,7 +74,7 @@ services:
       - .:/var/lib/ghost/content
       - /etc/localtime:/etc/localtime:ro
     environment:
-      url: https://ghost.joegatt.net
+      url: https://v1.aphroconfuso.mt
       mail__transport: "${MAIL_TRANSPORT}"
       mail__options__host: "${MAIL_HOST}"
       mail__options__port: "${MAIL_PORT}"
@@ -83,7 +83,7 @@ services:
       mail__options__auth__pass: "${MAIL_PASSWORD}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ghost.rule=Host(`ghost.joegatt.net`)"
+      - "traefik.http.routers.ghost.rule=Host(`v1.aphroconfuso.mt`)"
       - "traefik.http.routers.ghost.entrypoints=websecure"
       - "traefik.http.routers.ghost.tls.certresolver=myresolver"
     networks:
@@ -159,6 +159,20 @@ services:
       - backend
     ports:
       - 5432:5432
+
+  v0aphroconfuso:
+    container_name: v0.aphroconfuso
+    build:
+      context: ./aphroconfuso-v0
+    volumes:
+      - ./aphroconfuso-v0:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`, `aphroconfuso.com`)"
+      - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
+      - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
+    networks:
+      - frontend
 
   v3joegattnet:
     container_name: v3.joegatt.net
