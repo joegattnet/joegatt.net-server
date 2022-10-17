@@ -168,7 +168,7 @@ services:
       - ./aphroconfuso-v0:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`, `aphroconfuso.com`)"
+      - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
     networks:

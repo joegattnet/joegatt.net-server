@@ -2,3 +2,5 @@
 *sandbox*
 .env
 /traefik
+acme.json
+letsencrypt
