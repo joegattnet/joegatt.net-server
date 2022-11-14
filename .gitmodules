@@ -13,3 +13,6 @@
 [submodule "joegatt.net-web"]
 	path = joegatt.net-web
 	url = git@github.com:joegattnet/joegatt.net-web.git
+[submodule "aphroconfuso.mt-v1"]
+	path = aphroconfuso.mt-v1
+	url = ./aphroconfuso.mt-v1
