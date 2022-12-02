@@ -3,7 +3,7 @@ services:
     image: "traefik:v2.5"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=WARN"
       - "--api=true"
       - "--api.dashboard=true"
       - "--api.insecure=false"
