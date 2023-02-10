@@ -16,3 +16,6 @@
 [submodule "aphroconfuso.mt-v1"]
 	path = aphroconfuso.mt-v1
 	url = ./aphroconfuso.mt-v1
+[submodule "aphroconfuso.mt-listmonk"]
+	path = aphroconfuso.mt-listmonk
+	url = ./aphroconfuso.mt-listmonk

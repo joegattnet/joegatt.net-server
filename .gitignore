@@ -4,3 +4,4 @@
 /traefik
 acme.json
 letsencrypt
+*.mp4
