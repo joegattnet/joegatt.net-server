@@ -90,6 +90,7 @@ services:
       - frontend
     restart: unless-stopped
 
+  # repeated
   postgres-listmonk:
     image: postgres:11
     ports:
