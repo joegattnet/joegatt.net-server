@@ -129,7 +129,7 @@ services:
       [
         sh,
         -c,
-        "yes | ./listmonk --install --config config.toml && ./listmonk --config config.toml",
+        "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml",
       ]
     volumes:
       - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
