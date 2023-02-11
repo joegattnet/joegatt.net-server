@@ -117,7 +117,10 @@ services:
     image: listmonk/listmonk:latest
     ports:
       - "9000:9000"
+    environment:
+      - TZ=Etc/GMT+1
     networks:
+      - frontend
       - listmonk
     depends_on:
       - postgres
