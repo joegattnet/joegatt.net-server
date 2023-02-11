@@ -110,8 +110,8 @@ services:
   listmonk:
     restart: unless-stopped
     image: listmonk/listmonk:latest
-    # ports:
-    #   - "9000:9000"
+    ports:
+      - "9000:9000"
     networks:
       - listmonk
     depends_on:
@@ -176,7 +176,7 @@ services:
         "--token",
         "api.jwt_token",
         "--default-role",
-        "unregistered"
+        "unregistered",
       ]
     ports:
       - 5433:5433
