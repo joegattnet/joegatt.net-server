@@ -110,8 +110,8 @@ services:
   listmonk:
     restart: unless-stopped
     image: listmonk/listmonk:latest
-    ports:
-      - "9000:9000"
+    # ports:
+    #   - "9000:9000"
     networks:
       - listmonk
     depends_on:
