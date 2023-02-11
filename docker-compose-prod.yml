@@ -99,7 +99,7 @@ services:
       - listmonk
     environment:
       - POSTGRES_DB=listmonk
-      - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
+      - POSTGRES_PASSWORD=listmonk
       - POSTGRES_USER=listmonk
     restart: unless-stopped
     volumes:
@@ -118,8 +118,8 @@ services:
       - postgres-listmonk
     command: "./listmonk --static-dir=/listmonk/static"
     volumes:
-      - ./config.toml:/listmonk/config.toml
-      - ./static:/listmonk/static
+      - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
+      - ./aphroconfuso.mt-listmonk/static:/listmonk/static
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ghost.rule=Host(`listmonk.aphroconfuso.mt`)"
