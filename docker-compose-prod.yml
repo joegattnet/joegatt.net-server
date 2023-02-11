@@ -124,7 +124,14 @@ services:
       - listmonk
     depends_on:
       - postgres
-    command: "./listmonk --static-dir=/listmonk/static"
+    # command: "./listmonk --static-dir=/listmonk/static"
+    command:
+      [
+        sh,
+        -c,
+        "yes | ./listmonk --install --config config-demo.toml && ./listmonk --config config-demo.toml",
+      ]
+    # command: [sh, -c, "yes | ./listmonk --install --config config.toml && ./listmonk --config config.toml"]
     volumes:
       - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
       - ./aphroconfuso.mt-listmonk/static:/listmonk/static
