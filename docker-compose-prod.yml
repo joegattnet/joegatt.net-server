@@ -120,7 +120,7 @@ services:
     networks:
       - listmonk
     depends_on:
-      - postgres-listmonk
+      - postgres
     command: "./listmonk --static-dir=/listmonk/static"
     volumes:
       - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
@@ -198,6 +198,7 @@ services:
       - POSTGRES_USER=${JOEGATTNET_USER}
     networks:
       - backend
+      - listmonk
     ports:
       - 5432:5432
 
@@ -250,8 +251,9 @@ volumes:
   listmonk-data:
 
 networks:
-  listmonk:
   frontend:
     external: true
   backend:
+    external: false
+  listmonk:
     external: false
