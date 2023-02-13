@@ -65,81 +65,6 @@ services:
       - POSTGRES_USER=${JOEGATTNET_USER}
     restart: always
 
-  aphroconfuso:
-    container_name: aphroconfuso
-    image: ghost:5.8.3
-    ports:
-      - "2368:2368"
-    volumes:
-      - .:/var/lib/ghost/content
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      url: https://v1.aphroconfuso.mt
-      mail__transport: "${MAIL_TRANSPORT}"
-      mail__options__host: "${MAIL_HOST}"
-      mail__options__port: "${MAIL_PORT}"
-      mail__options__secureConnection: "${MAIL_SECURE_CONNECTION}"
-      mail__options__auth__user: "${MAIL_USER}"
-      mail__options__auth__pass: "${MAIL_PASSWORD}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ghost.rule=Host(`v1.aphroconfuso.mt`)"
-      - "traefik.http.routers.ghost.entrypoints=websecure"
-      - "traefik.http.routers.ghost.tls.certresolver=myresolver"
-    networks:
-      - frontend
-    restart: unless-stopped
-
-  # repeated
-  postgres-listmonk:
-    image: postgres:11
-    ports:
-      - "9432:5432"
-    networks:
-      - listmonk
-    environment:
-      - POSTGRES_DB=listmonk
-      - POSTGRES_PASSWORD=listmonk
-      - POSTGRES_USER=listmonk
-    restart: unless-stopped
-    volumes:
-      - type: volume
-        source: listmonk-data
-        target: /var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U listmonk"]
-      interval: 10s
-      timeout: 5s
-      retries: 6
-
-  listmonk:
-    restart: unless-stopped
-    image: listmonk/listmonk:latest
-    ports:
-      - "9000:9000"
-    environment:
-      - TZ=Etc/GMT+1
-    networks:
-      - frontend
-      - listmonk
-    depends_on:
-      - postgres
-    # command: "./listmonk --static-dir=/listmonk/static"
-    command:
-      [
-        sh,
-        -c,
-        "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml",
-      ]
-    volumes:
-      - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
-      - ./aphroconfuso.mt-listmonk/static:/listmonk/static
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ghost.rule=Host(`listmonk.aphroconfuso.mt`)"
-      - "traefik.http.routers.ghost.entrypoints=websecure"
-      - "traefik.http.routers.ghost.tls.certresolver=myresolver"
-
   web:
     container_name: web.joegatt.net
     build:
@@ -207,23 +132,8 @@ services:
       - POSTGRES_USER=${JOEGATTNET_USER}
     networks:
       - backend
-      - listmonk
     ports:
       - 5432:5432
-
-  v0aphroconfuso:
-    container_name: v0.aphroconfuso
-    build:
-      context: ./aphroconfuso-v0
-    volumes:
-      - ./aphroconfuso-v0:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
-      - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
-      - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-    networks:
-      - frontend
 
   v3joegattnet:
     container_name: v3.joegatt.net
@@ -254,6 +164,97 @@ services:
       - "traefik.http.routers.dbadmin.tls.certresolver=myresolver"
       # - "traefik.http.routers.dbadmin.middlewares=dbauth"
       # - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
+
+  # APHROCONFUSO ************************************************************
+  # *************************************************************************
+
+  v0aphroconfuso:
+    container_name: v0.aphroconfuso
+    build:
+      context: ./aphroconfuso-v0
+    volumes:
+      - ./aphroconfuso-v0:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
+      - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
+      - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
+    networks:
+      - frontend
+
+  aphroconfuso:
+    container_name: aphroconfuso
+    image: ghost:5.8.3
+    ports:
+      - "2368:2368"
+    volumes:
+      - .:/var/lib/ghost/content
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      url: https://v1.aphroconfuso.mt
+      mail__transport: "${MAIL_TRANSPORT}"
+      mail__options__host: "${MAIL_HOST}"
+      mail__options__port: "${MAIL_PORT}"
+      mail__options__secureConnection: "${MAIL_SECURE_CONNECTION}"
+      mail__options__auth__user: "${MAIL_USER}"
+      mail__options__auth__pass: "${MAIL_PASSWORD}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ghost.rule=Host(`v1.aphroconfuso.mt`)"
+      - "traefik.http.routers.ghost.entrypoints=websecure"
+      - "traefik.http.routers.ghost.tls.certresolver=myresolver"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+  postgres-listmonk:
+    image: postgres:11
+    ports:
+      - "9432:5432"
+    networks:
+      - listmonk
+    environment:
+      - POSTGRES_DB=listmonk
+      - POSTGRES_PASSWORD=listmonk
+      - POSTGRES_USER=listmonk
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: listmonk-data
+        target: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U listmonk"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  listmonk:
+    restart: unless-stopped
+    image: listmonk/listmonk:latest
+    ports:
+      - "9000:9000"
+    environment:
+      - TZ=Etc/GMT+1
+    networks:
+      - frontend
+      - listmonk
+    depends_on:
+      - postgres
+    # command: "./listmonk --static-dir=/listmonk/static"
+    command:
+      [
+        sh,
+        -c,
+        "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml",
+      ]
+    volumes:
+      - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
+      - ./aphroconfuso.mt-listmonk/static:/listmonk/static
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ghost.rule=Host(`listmonk.aphroconfuso.mt`)"
+      - "traefik.http.routers.ghost.entrypoints=websecure"
+      - "traefik.http.routers.ghost.tls.certresolver=myresolver"
 
 volumes:
   dbdata:
