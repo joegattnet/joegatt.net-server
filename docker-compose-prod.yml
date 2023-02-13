@@ -208,6 +208,7 @@ services:
     restart: unless-stopped
 
   postgres-listmonk:
+    container_name: postgres-listmonk
     image: postgres:11
     ports:
       - "9432:5432"
@@ -229,6 +230,7 @@ services:
       retries: 6
 
   listmonk:
+    container_name: listmonk
     restart: unless-stopped
     image: listmonk/listmonk:latest
     ports:
