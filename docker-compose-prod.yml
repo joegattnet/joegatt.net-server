@@ -207,17 +207,17 @@ services:
       - frontend
     restart: unless-stopped
 
-  postgres-listmonk:
-    container_name: postgres-listmonk
+  postgreslistmonk:
+    container_name: postgreslistmonk
     image: postgres:11
     ports:
       - "9432:5432"
     networks:
       - listmonk
     environment:
-      - POSTGRES_DB=listmonk
-      - POSTGRES_PASSWORD=listmonk
-      - POSTGRES_USER=listmonk
+      - POSTGRES_DB=${LISTMONK_DB}
+      - POSTGRES_PASSWORD=${LISTMONK_PASSWORD}
+      - POSTGRES_USER=${LISTMONK_USER}
     restart: unless-stopped
     volumes:
       - type: volume
@@ -246,7 +246,7 @@ services:
       [
         sh,
         -c,
-        "yes | ./listmonk --upgrade --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
+        "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
       ]
     volumes:
       - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
