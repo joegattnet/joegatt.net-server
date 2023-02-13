@@ -291,6 +291,7 @@ services:
       POSTGRES_DB: ${STRAPI_DB}
       POSTGRES_USER: ${STRAPI_USER}
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
+    command: -p 5433
     volumes:
       - ./aphroconfuso.mt-strapi/postgresql/data:/var/lib/postgresql/data
     networks:
