@@ -240,12 +240,11 @@ services:
       - listmonk
     depends_on:
       - postgres
-    # command: "./listmonk --static-dir=/listmonk/static"
     command:
       [
         sh,
         -c,
-        "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml",
+        "yes | ./listmonk --upgrade --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
       ]
     volumes:
       - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
@@ -266,4 +265,4 @@ networks:
   backend:
     external: false
   listmonk:
-    external: false
+    external: true
