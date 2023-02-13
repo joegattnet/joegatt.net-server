@@ -252,9 +252,9 @@ services:
       - ./aphroconfuso.mt-listmonk/static:/listmonk/static
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ghost.rule=Host(`listmonk.aphroconfuso.mt`)"
-      - "traefik.http.routers.ghost.entrypoints=websecure"
-      - "traefik.http.routers.ghost.tls.certresolver=myresolver"
+      - "traefik.http.routers.listmonk.rule=Host(`listmonk.aphroconfuso.mt`)"
+      - "traefik.http.routers.listmonk.entrypoints=websecure"
+      - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
 
 volumes:
   dbdata:
