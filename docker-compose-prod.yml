@@ -154,9 +154,11 @@ services:
     image: adminer
     depends_on:
       - postgres
+      - postgreslistmonk
     networks:
       - backend
       - frontend
+      - listmonk
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`, `adminer.joegatt.org`)"
@@ -219,10 +221,10 @@ services:
       - POSTGRES_PASSWORD=${LISTMONK_PASSWORD}
       - POSTGRES_USER=${LISTMONK_USER}
     restart: unless-stopped
-    # volumes:
-    #   - type: volume
-    #     source: listmonk-data
-    #     target: /var/lib/postgresql/data
+    volumes:
+      - type: volume
+        source: listmonk-data
+        target: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U listmonk"]
       interval: 10s
