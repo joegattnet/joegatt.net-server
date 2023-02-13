@@ -5,3 +5,6 @@
 acme.json
 letsencrypt
 *.mp4
+
+aphroconfuso.mt/*
+aphroconfuso.mt-ghost/*

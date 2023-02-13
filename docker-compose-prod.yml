@@ -223,9 +223,7 @@ services:
       - POSTGRES_USER=${LISTMONK_USER}
     restart: unless-stopped
     volumes:
-      - type: volume
-        source: listmonk-data
-        target: /var/lib/postgresql/data
+      - ./aphroconfuso.mt-v1-data/listmonk/postgresql/data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U listmonk"]
       interval: 10s
@@ -252,8 +250,8 @@ services:
         "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
       ]
     volumes:
-      - ./aphroconfuso.mt-listmonk/config.toml:/listmonk/config.toml
-      - ./aphroconfuso.mt-listmonk/static:/listmonk/static
+      - ./aphroconfuso.mt-v1/listmonk/config.toml:/listmonk/config.toml
+      - ./aphroconfuso.mt-v1/listmonk/static:/listmonk/static
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.newsletter.rule=Host(`newsletter.aphroconfuso.mt`)"
@@ -271,7 +269,7 @@ services:
       DATABASE_USERNAME: ${STRAPI_USER}
       DATABASE_PASSWORD: ${STRAPI_PASSWORD}
     volumes:
-      - ./aphroconfuso.mt-strapi:/srv/app
+      - ./aphroconfuso.mt-v1/strapi:/srv/app
     ports:
       - "1337:1337"
     depends_on:
@@ -293,7 +291,7 @@ services:
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
     command: -p 5433
     volumes:
-      - ./aphroconfuso.mt-strapi/postgresql/data:/var/lib/postgresql/data
+      - ./aphroconfuso.mt-v1-data/strapi/postgresql/data:/var/lib/postgresql/data
     networks:
       - strapi
 
