@@ -236,8 +236,8 @@ services:
     container_name: listmonk
     restart: unless-stopped
     image: listmonk/listmonk:latest
-    # ports:
-    #   - "9000:9000"
+    ports:
+      - "9000:9000"
     environment:
       - TZ=Etc/GMT+1
     networks:
@@ -260,6 +260,40 @@ services:
       - "traefik.http.routers.listmonk.entrypoints=websecure"
       - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
 
+  strapi:
+    image: strapi/strapi
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_NAME: ${STRAPI_DB}
+      DATABASE_HOST: postgresstrapi
+      DATABASE_PORT: 5433
+      DATABASE_USERNAME: ${STRAPI_USER}
+      DATABASE_PASSWORD: ${STRAPI_PASSWORD}
+    volumes:
+      - ./aphroconfuso.mt-strapi:/srv/app
+    ports:
+      - "1337:1337"
+    depends_on:
+      - postgresstrapi
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.listmonk.rule=Host(`cms.aphroconfuso.mt`)"
+      - "traefik.http.routers.listmonk.entrypoints=websecure"
+      - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
+    networks:
+      - strapi
+
+  postgresstrapi:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${STRAPI_DB}
+      POSTGRES_USER: ${STRAPI_USER}
+      POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
+    volumes:
+      - ./aphroconfuso.mt-strapi/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - strapi
+
 volumes:
   dbdata:
   listmonk-data:
@@ -270,4 +304,6 @@ networks:
   backend:
     external: false
   listmonk:
+    external: true
+  strapi:
     external: true
