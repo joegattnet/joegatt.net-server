@@ -214,7 +214,7 @@ services:
     image: postgres:11
     ports:
       - "9433:5432"
-    command: -p 5433
+    command: -p 9433
     networks:
       - listmonk
     environment:
