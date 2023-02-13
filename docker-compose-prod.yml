@@ -261,6 +261,7 @@ services:
       - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
 
   strapi:
+    container_name: strapi
     image: strapi/strapi
     environment:
       DATABASE_CLIENT: postgres
@@ -284,6 +285,7 @@ services:
       - strapi
 
   postgresstrapi:
+    container_name: postgresstrapi
     image: postgres
     environment:
       POSTGRES_DB: ${STRAPI_DB}
