@@ -256,9 +256,9 @@ services:
       - ./aphroconfuso.mt-listmonk/static:/listmonk/static
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.listmonk.rule=Host(`listmonk.aphroconfuso.mt`)"
-      - "traefik.http.routers.listmonk.entrypoints=websecure"
-      - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
+      - "traefik.http.routers.newsletter.rule=Host(`newsletter.aphroconfuso.mt`)"
+      - "traefik.http.routers.newsletter.entrypoints=websecure"
+      - "traefik.http.routers.newsletter.tls.certresolver=myresolver"
 
   strapi:
     container_name: strapi
@@ -278,9 +278,9 @@ services:
       - postgresstrapi
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.listmonk.rule=Host(`cms.aphroconfuso.mt`)"
-      - "traefik.http.routers.listmonk.entrypoints=websecure"
-      - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
+      - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
+      - "traefik.http.routers.cms.entrypoints=websecure"
+      - "traefik.http.routers.cms.tls.certresolver=myresolver"
     networks:
       - strapi
 
