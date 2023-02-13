@@ -236,8 +236,8 @@ services:
     container_name: listmonk
     restart: unless-stopped
     image: listmonk/listmonk:latest
-    ports:
-      - "9000:9000"
+    # ports:
+    #   - "9000:9000"
     environment:
       - TZ=Etc/GMT+1
     networks:
