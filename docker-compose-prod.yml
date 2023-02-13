@@ -209,27 +209,6 @@ services:
       - frontend
     restart: unless-stopped
 
-  postgreslistmonk:
-    container_name: postgreslistmonk
-    image: postgres:11
-    ports:
-      - "9433:5432"
-    command: -p 9433
-    networks:
-      - listmonk
-    environment:
-      - POSTGRES_DB=${LISTMONK_DB}
-      - POSTGRES_PASSWORD=${LISTMONK_PASSWORD}
-      - POSTGRES_USER=${LISTMONK_USER}
-    restart: unless-stopped
-    volumes:
-      - ./aphroconfuso.mt-v1-data/listmonk/postgresql/data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U listmonk"]
-      interval: 10s
-      timeout: 5s
-      retries: 6
-
   listmonk:
     container_name: listmonk
     restart: unless-stopped
@@ -257,6 +236,27 @@ services:
       - "traefik.http.routers.newsletter.rule=Host(`newsletter.aphroconfuso.mt`)"
       - "traefik.http.routers.newsletter.entrypoints=websecure"
       - "traefik.http.routers.newsletter.tls.certresolver=myresolver"
+
+  postgreslistmonk:
+    container_name: postgreslistmonk
+    image: postgres:11
+    ports:
+      - "9433:5432"
+    command: -p 9433
+    networks:
+      - listmonk
+    environment:
+      - POSTGRES_DB=${LISTMONK_DB}
+      - POSTGRES_PASSWORD=${LISTMONK_PASSWORD}
+      - POSTGRES_USER=${LISTMONK_USER}
+    restart: unless-stopped
+    volumes:
+      - aphroconfuso.mt-v1-listmonk-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U listmonk"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
 
   strapi:
     container_name: strapi
@@ -291,13 +291,14 @@ services:
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
     command: -p 5433
     volumes:
-      - ./aphroconfuso.mt-v1-data/strapi/postgresql/data:/var/lib/postgresql/data
+      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
     networks:
       - strapi
 
 volumes:
   dbdata:
-  listmonk-data:
+  aphroconfuso.mt-v1-listmonk-data:
+  aphroconfuso.mt-v1-strapi-data:
 
 networks:
   frontend:
