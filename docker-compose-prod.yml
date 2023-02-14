@@ -226,8 +226,10 @@ services:
       [
         sh,
         -c,
-        "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
+        "yes | ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
       ]
+      # First time
+      # "yes | ./listmonk --install --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
     volumes:
       - ./aphroconfuso.mt-v1/listmonk/config.toml:/listmonk/config.toml
       - ./aphroconfuso.mt-v1/listmonk/static:/listmonk/static
