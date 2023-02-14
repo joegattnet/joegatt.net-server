@@ -283,6 +283,7 @@ services:
       - "traefik.http.routers.cms.tls.certresolver=myresolver"
     networks:
       - strapi
+      - frontend
 
   postgresstrapi:
     container_name: postgresstrapi
