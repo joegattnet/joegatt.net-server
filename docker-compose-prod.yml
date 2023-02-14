@@ -260,8 +260,9 @@ services:
 
   strapi:
     container_name: strapi
-    image: strapi/strapi
+    image: naskio/strapi
     environment:
+      NODE_ENV: production
       DATABASE_CLIENT: postgres
       DATABASE_NAME: ${STRAPI_DB}
       DATABASE_HOST: postgresstrapi
