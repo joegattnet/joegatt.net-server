@@ -231,6 +231,7 @@ services:
     volumes:
       - ./aphroconfuso.mt-v1/listmonk/config.toml:/listmonk/config.toml
       - ./aphroconfuso.mt-v1/listmonk/static:/listmonk/static
+      - ./aphroconfuso.mt-v1/listmonk/i18n:/listmonk/i18n
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.newsletter.rule=Host(`newsletter.aphroconfuso.mt`)"
