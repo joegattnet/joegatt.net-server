@@ -226,7 +226,7 @@ services:
       [
         sh,
         -c,
-        "yes | ./listmonk --install --idempotent --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static",
+        "yes | ./listmonk --install --idempotent --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static --i18n-dir=/listmonk/i18n",
       ]
     volumes:
       - ./aphroconfuso.mt-v1/listmonk/config.toml:/listmonk/config.toml
