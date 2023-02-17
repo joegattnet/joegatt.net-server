@@ -328,7 +328,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     env_file:
-      - ./db.env
+      - ./mariadb.env
     networks:
       - matomo
       - frontend
