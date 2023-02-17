@@ -308,7 +308,7 @@ services:
     environment:
       - MATOMO_DATABASE_HOST=mariadbmatomo
     env_file:
-      - ./db.env
+      - ./mariadb.env
     ports:
       - 8080:80
     labels:
