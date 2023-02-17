@@ -307,10 +307,6 @@ services:
       - ./aphroconfuso.mt-v1/matomo/logs:/var/www/html/logs
     environment:
       - MATOMO_DATABASE_HOST=mariadbmatomo
-    env_file:
-      - ./mariadb.env
-    ports:
-      - 8080:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`statistics.aphroconfuso.mt`)"
@@ -327,8 +323,6 @@ services:
       - aphroconfuso.mt-v1-matomo-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    env_file:
-      - ./mariadb.env
     networks:
       - matomo
       - frontend
