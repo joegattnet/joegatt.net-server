@@ -299,9 +299,44 @@ services:
     networks:
       - strapi
 
+  matomo:
+    image: matomo
+    restart: always
+    volumes:
+      - ./aphroconfuso.mt-v1/matomo/config:/var/www/html/config
+      - ./aphroconfuso.mt-v1/matomo/logs:/var/www/html/logs
+    environment:
+      - MATOMO_DATABASE_HOST=mariadbmatomo
+    env_file:
+      - ./db.env
+    ports:
+      - 8080:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cms.rule=Host(`statistics.aphroconfuso.mt`)"
+      - "traefik.http.routers.statistics.entrypoints=websecure"
+      - "traefik.http.routers.statistics.tls.certresolver=myresolver"
+    networks:
+      - matomo
+
+  mariadbmatomo:
+    image: mariadb
+    command: --max-allowed-packet=64MB
+    restart: always
+    volumes:
+      - aphroconfuso.mt-v1-matomo-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    env_file:
+      - ./db.env
+    networks:
+      - matomo
+      - frontend
+
 volumes:
   dbdata:
   aphroconfuso.mt-v1-listmonk-data:
+  aphroconfuso.mt-v1-matomo-data:
   aphroconfuso.mt-v1-strapi-data:
 
 networks:
@@ -310,6 +345,8 @@ networks:
   backend:
     external: false
   listmonk:
+    external: true
+  matomo:
     external: true
   strapi:
     external: true
