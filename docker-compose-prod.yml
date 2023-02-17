@@ -316,6 +316,7 @@ services:
       - "traefik.http.routers.statistika.tls.certresolver=myresolver"
     networks:
       - matomo
+      - frontend
 
   mariadbmatomo:
     container_name: mariadbmatomo
@@ -328,7 +329,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     networks:
       - matomo
-      - frontend
+      - backend
 
 volumes:
   dbdata:
