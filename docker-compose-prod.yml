@@ -303,7 +303,6 @@ services:
     container_name: matomo
     image: matomo
     restart: always
-    command: --api --docker
     volumes:
       - ./aphroconfuso.mt-v1/matomo/config:/var/www/html/config
       - ./aphroconfuso.mt-v1/matomo/logs:/var/www/html/logs
