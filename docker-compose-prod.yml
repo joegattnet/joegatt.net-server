@@ -310,9 +310,9 @@ services:
       - MATOMO_DATABASE_HOST=mariadbmatomo
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.statistika.rule=Host(`statistika.aphroconfuso.mt`)"
-      - "traefik.http.routers.statistika.entrypoints=websecure"
-      - "traefik.http.routers.statistika.tls.certresolver=myresolver"
+      - "traefik.http.routers.analitika.rule=Host(`analitika.aphroconfuso.mt`)"
+      - "traefik.http.routers.analitika.entrypoints=websecure"
+      - "traefik.http.routers.analitika.tls.certresolver=myresolver"
     networks:
       - matomo
       - frontend
