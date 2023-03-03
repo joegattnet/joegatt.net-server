@@ -23,6 +23,8 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
+      - "traefik.http.routers.app-https.middlewares=cors"
+      - "traefik.http.middlewares.newsletter-cors.headers.accesscontrolalloworiginlist=https://aphroconfuso.mt,https://newsletter.aphroconfuso.mt"
       - "traefik.http.routers.redirect-router.entrypoints=websecure"
       - "traefik.http.routers.redirect-router.rule=Host(`newsletter.joegatt.net`)"
       - "traefik.http.routers.redirect-router.middlewares=redirect-regex"
@@ -181,7 +183,7 @@ services:
       - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.v0aphroconfuso.headers.accessControlAllowOriginList=https://aphroconfuso.mt,https://newsletter.aphroconfuso.mt"
+      - "traefik.http.routers.v0aphroconfuso.middlewares=newsletter-cors"
 
     networks:
       - frontend
