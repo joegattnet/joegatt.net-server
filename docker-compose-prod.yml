@@ -181,6 +181,8 @@ services:
       - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.v0aphroconfuso.headers.accessControlAllowOriginList=https://aphroconfuso.mt,https://newsletter.aphroconfuso.mt"
+
     networks:
       - frontend
 
@@ -238,7 +240,6 @@ services:
       - "traefik.http.routers.newsletter.rule=Host(`newsletter.aphroconfuso.mt`)"
       - "traefik.http.routers.newsletter.entrypoints=websecure"
       - "traefik.http.routers.newsletter.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.newsletter.headers.accessControlAllowOriginList=https://aphroconfuso.mt,https://newsletter.aphroconfuso.mt"
 
   postgreslistmonk:
     container_name: postgreslistmonk
