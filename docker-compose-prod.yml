@@ -23,15 +23,8 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
-      - "traefik.http.routers.app-https.middlewares=cors"
-      - "traefik.http.middlewares.newsletter-cors.headers.accesscontrolallowmethods=GET"
-      - "traefik.http.middlewares.newsletter-cors.headers.accessControlAllowOriginList=https://aphroconfuso.mt,https://newsletter.aphroconfuso.mt"
-      - "traefik.http.routers.redirect-router.entrypoints=websecure"
-      - "traefik.http.routers.redirect-router.rule=Host(`newsletter.joegatt.net`)"
-      - "traefik.http.routers.redirect-router.middlewares=redirect-regex"
-      - "traefik.http.middlewares.redirect-regex.redirectregex.regex=(.)*"
-      - "traefik.http.middlewares.redirect-regex.redirectregex.replacement=https://newsletter.joegatt.org"
-      - "traefik.http.middlewares.redirect-regex.redirectregex.permanent=false"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS"
+      - "traefik.http.middlewares.cors.headers.accessControlAllowOriginListRegex=https://(.*?)aphroconfuso.mt"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
