@@ -15,5 +15,7 @@
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-  "html.format.wrapLineLength": 0
+  "html.format.wrapLineLength": 0,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false
 }
