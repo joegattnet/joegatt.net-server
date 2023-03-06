@@ -172,7 +172,6 @@ services:
       - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-      - "traefik.http.routers.v0aphroconfuso.middlewares=cors"
 
     networks:
       - frontend
