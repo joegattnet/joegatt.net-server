@@ -16,15 +16,10 @@ services:
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--pilot.token=${TRAEFIK_PILOT_KEY}"
     labels:
-      - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`, `traefik.joegatt.org`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${ADMINER_USER_PASSWORD}"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS"
-      - "traefik.http.middlewares.cors.headers.accessControlAllowOriginListRegex=https://(.*?)aphroconfuso.mt"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
