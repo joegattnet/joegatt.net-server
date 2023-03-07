@@ -98,6 +98,10 @@ services:
       - "traefik.http.routers.listmonk.rule=Host(`newsletter.aphroconfuso.mt`)"
       - "traefik.http.routers.listmonk.entrypoints=websecure"
       - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.listmonk.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.listmonk.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
+      - "traefik.http.middlewares.listmonk.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.listmonk.headers.addvaryheader=true"
 
   postgreslistmonk:
     container_name: postgreslistmonk
