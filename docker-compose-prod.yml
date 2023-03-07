@@ -19,7 +19,6 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`, `traefik.joegatt.org`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
-      - "traefik.http.routers.traefik.service=api@internal"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
@@ -61,10 +60,10 @@ services:
       - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.v0aphroconfuso.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.v0aphroconfuso.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
-      - "traefik.http.middlewares.v0aphroconfuso.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.v0aphroconfuso.headers.addvaryheader=true"
+      - "traefik.http.middlewares.testHeader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.testHeader.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
+      - "traefik.http.middlewares.testHeader.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.testHeader.headers.addvaryheader=true"
 
     networks:
       - frontend
@@ -98,10 +97,6 @@ services:
       - "traefik.http.routers.listmonk.rule=Host(`newsletter.aphroconfuso.mt`)"
       - "traefik.http.routers.listmonk.entrypoints=websecure"
       - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.listmonk.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.listmonk.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
-      - "traefik.http.middlewares.listmonk.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.listmonk.headers.addvaryheader=true"
 
   postgreslistmonk:
     container_name: postgreslistmonk
