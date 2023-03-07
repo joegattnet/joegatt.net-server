@@ -19,6 +19,10 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.joegatt.net`, `traefik.joegatt.org`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.testHeader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.testHeader.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
+      - "traefik.http.middlewares.testHeader.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.testHeader.headers.addvaryheader=true"
     environment:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
@@ -60,10 +64,6 @@ services:
       - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.testHeader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.testHeader.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
-      - "traefik.http.middlewares.testHeader.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.testHeader.headers.addvaryheader=true"
 
     networks:
       - frontend
