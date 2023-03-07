@@ -131,7 +131,7 @@ services:
       - MATOMO_DATABASE_HOST=mariadbmatomo
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.matomo.rule=Host(`matomo.aphroconfuso.mt`)"
+      - "traefik.http.routers.matomo.rule=Host(`analitika.aphroconfuso.mt`)"
       - "traefik.http.routers.matomo.entrypoints=websecure"
       - "traefik.http.routers.matomo.tls.certresolver=myresolver"
     networks:
