@@ -61,6 +61,10 @@ services:
       - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.v0aphroconfuso.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.v0aphroconfuso.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
+      - "traefik.http.middlewares.v0aphroconfuso.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.v0aphroconfuso.headers.addvaryheader=true"
 
     networks:
       - frontend
@@ -94,10 +98,6 @@ services:
       - "traefik.http.routers.listmonk.rule=Host(`newsletter.aphroconfuso.mt`)"
       - "traefik.http.routers.listmonk.entrypoints=websecure"
       - "traefik.http.routers.listmonk.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.listmonk.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.listmonk.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
-      - "traefik.http.middlewares.listmonk.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.listmonk.headers.addvaryheader=true"
 
   postgreslistmonk:
     container_name: postgreslistmonk
