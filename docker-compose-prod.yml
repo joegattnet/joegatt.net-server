@@ -168,6 +168,11 @@ services:
   #     - ./aphroconfuso.mt-v1/strapi/strapi-v4/app:/srv/app
   #   ports:
   #     - 1337:1337
+  # labels:
+  #   - "traefik.enable=true"
+  #   - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
+  #   - "traefik.http.routers.cms.entrypoints=websecure"
+  #   - "traefik.http.routers.cms.tls.certresolver=myresolver"
   #   depends_on:
   #     - postgresstrapi
   #   networks:
@@ -193,6 +198,11 @@ services:
       - 1337:1337
     depends_on:
       - postgresstrapi
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
+      - "traefik.http.routers.cms.entrypoints=websecure"
+      - "traefik.http.routers.cms.tls.certresolver=myresolver"
     networks:
       - strapi
       - frontend
