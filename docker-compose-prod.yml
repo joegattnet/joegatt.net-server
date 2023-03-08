@@ -151,6 +151,66 @@ services:
       - matomo
       - backend
 
+  # strapiprod:
+  #   build:
+  #     context: ./aphroconfuso.mt-v1/strapi/strapi-v4/app
+  #   container_name: strapiprod
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_CLIENT: postgres
+  #     DATABASE_HOST: postgresstrapi
+  #     DATABASE_PORT: 5437
+  #     DATABASE_NAME: ${STRAPI_DB}
+  #     DATABASE_USERNAME: ${STRAPI_USER}
+  #     DATABASE_PASSWORD: ${STRAPI_PASSWORD}
+  #   volumes:
+  #     - ./aphroconfuso.mt-v1/strapi/strapi-v4/app:/srv/app
+  #   ports:
+  #     - 1337:1337
+  #   depends_on:
+  #     - postgresstrapi
+  #   networks:
+  #     - strapi
+  #     - frontend
+
+  strapidev:
+    build:
+      context: ./aphroconfuso.mt-v1/strapi/strapi-v4/app
+    container_name: strapidev
+    restart: unless-stopped
+    environment:
+      NODE_ENV: develop
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgresstrapi
+      DATABASE_PORT: 5437
+      DATABASE_NAME: ${STRAPI_DB}
+      DATABASE_USERNAME: ${STRAPI_USER}
+      DATABASE_PASSWORD: ${STRAPI_PASSWORD}
+    volumes:
+      - ./aphroconfuso.mt-v1/strapi/strapi-v4/app:/srv/app
+    ports:
+      - 1337:1337
+    depends_on:
+      - postgresstrapi
+    networks:
+      - strapi
+      - frontend
+
+  postgresstrapi:
+    container_name: postgresstrapi
+    restart: unless-stopped
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${STRAPI_DB}
+      POSTGRES_USER: ${STRAPI_USER}
+      POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
+    command: -p 5437
+    volumes:
+      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
+    networks:
+      - strapi
+
 volumes:
   dbdata:
   aphroconfuso.mt-v1-listmonk-data:
