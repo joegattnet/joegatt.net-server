@@ -182,7 +182,7 @@ services:
   postgresstrapi:
     container_name: postgresstrapi
     restart: unless-stopped
-    image: postgres:13
+    image: postgres:15
     environment:
       POSTGRES_DB: ${STRAPI_DB}
       POSTGRES_USER: ${STRAPI_USER}
