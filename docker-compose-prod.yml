@@ -152,6 +152,7 @@ services:
       - backend
 
   strapi:
+    image: naskio/strapi
     container_name: strapi
     restart: unless-stopped
     environment:
