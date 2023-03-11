@@ -151,33 +151,33 @@ services:
       - matomo
       - backend
 
-  strapi:
-    build:
-      context: ./aphroconfuso.mt-v1/strapi/strapi-v4/app
-    container_name: strapi
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-      DATABASE_CLIENT: postgres
-      DATABASE_HOST: postgresstrapi
-      DATABASE_PORT: 5437
-      DATABASE_NAME: ${STRAPI_DB}
-      DATABASE_USERNAME: ${STRAPI_USER}
-      DATABASE_PASSWORD: ${STRAPI_PASSWORD}
-    volumes:
-      - ./aphroconfuso.mt-v1/strapi/strapi-v4/app:/srv/app
-    ports:
-      - 1337:1337
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
-      - "traefik.http.routers.cms.entrypoints=websecure"
-      - "traefik.http.routers.cms.tls.certresolver=myresolver"
-    depends_on:
-      - postgresstrapi
-    networks:
-      - strapi
-      - frontend
+  # strapi:
+  #   build:
+  #     context: ./aphroconfuso.mt-v1/strapi/strapi-v4/app
+  #   container_name: strapi
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_CLIENT: postgres
+  #     DATABASE_HOST: postgresstrapi
+  #     DATABASE_PORT: 5437
+  #     DATABASE_NAME: ${STRAPI_DB}
+  #     DATABASE_USERNAME: ${STRAPI_USER}
+  #     DATABASE_PASSWORD: ${STRAPI_PASSWORD}
+  #   volumes:
+  #     - ./aphroconfuso.mt-v1/strapi/strapi-v4/app:/srv/app
+  #   ports:
+  #     - 1337:1337
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
+  #     - "traefik.http.routers.cms.entrypoints=websecure"
+  #     - "traefik.http.routers.cms.tls.certresolver=myresolver"
+  #   depends_on:
+  #     - postgresstrapi
+  #   networks:
+  #     - strapi
+  #     - frontend
 
   postgresstrapi:
     container_name: postgresstrapi
