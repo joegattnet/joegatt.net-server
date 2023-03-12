@@ -200,6 +200,12 @@ services:
     networks:
       - strapi
 
+volumes:
+  dbdata:
+    aphroconfuso.mt-v1/listmonk:
+    aphroconfuso.mt-v1/matomo:
+    aphroconfuso.mt-v1/strapi:
+
 networks:
   frontend:
     external: true
