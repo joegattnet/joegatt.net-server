@@ -113,7 +113,7 @@ services:
       - POSTGRES_USER=${LISTMONK_USER}
     restart: unless-stopped
     volumes:
-      - aphroconfuso.mt-v1-listmonk-data:/var/lib/postgresql/data
+      - aphroconfuso.mt-v1-data/listmonk:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U listmonk"]
       interval: 10s
@@ -144,7 +144,7 @@ services:
     command: --max-allowed-packet=64MB
     restart: always
     volumes:
-      - aphroconfuso.mt-v1-matomo-data:/var/lib/mysql
+      - aphroconfuso.mt-v1-data/matomo:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     networks:
@@ -164,14 +164,13 @@ services:
       DATABASE_PORT: ${STRAPI_PORT}
       JWT_SECRET: ${STRAPI_JWT_SECRET}
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
-      DATABASE_PASSWORD: ${STRAPI_STRAPI_PASSWORD}
+      DATABASE_PASSWORD: ${STRAPI_PASSWORD}
       NODE_ENV: production
     volumes:
       - ./aphroconfuso.mt-v1/strapi/config:/opt/app/config
       - ./aphroconfuso.mt-v1/strapi/src:/opt/app/src
       - ./aphroconfuso.mt-v1/strapi/package.json:/opt/package.json
       - ./aphroconfuso.mt-v1/strapi/package-lock.json:/opt/package-lock.json
-      # - ./aphroconfuso.mt-v1/strapi/.env:/opt/app/.env
       - ./aphroconfuso.mt-v1/strapi/public/uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
@@ -195,18 +194,11 @@ services:
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
       POSTGRES_DB: ${STRAPI_NAME}
     volumes:
-      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
-      #- ./data:/var/lib/postgresql/data/ # if you want to use a bind folder
+      - aphroconfuso.mt-v1-data/strapi:/var/lib/postgresql/data
     ports:
       - "5437:5437"
     networks:
       - strapi
-
-volumes:
-  dbdata:
-  aphroconfuso.mt-v1-listmonk-data:
-  aphroconfuso.mt-v1-matomo-data:
-  aphroconfuso.mt-v1-strapi-data:
 
 networks:
   frontend:
