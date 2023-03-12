@@ -188,7 +188,7 @@ services:
   postgresstrapi:
     container_name: postgresstrapi
     restart: unless-stopped
-    image: postgres:14.5-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${STRAPI_USERNAME}
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
