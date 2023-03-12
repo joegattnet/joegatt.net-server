@@ -113,7 +113,7 @@ services:
       - POSTGRES_USER=${LISTMONK_USER}
     restart: unless-stopped
     volumes:
-      - aphroconfuso.mt-v1-data/listmonk:/var/lib/postgresql/data
+      - aphroconfuso.mt-v1-listmonk-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U listmonk"]
       interval: 10s
@@ -144,7 +144,7 @@ services:
     command: --max-allowed-packet=64MB
     restart: always
     volumes:
-      - aphroconfuso.mt-v1-data/matomo:/var/lib/mysql
+      - aphroconfuso.mt-v1-matomo-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     networks:
@@ -194,7 +194,7 @@ services:
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
       POSTGRES_DB: ${STRAPI_NAME}
     volumes:
-      - aphroconfuso.mt-v1-data/strapi:/var/lib/postgresql/data
+      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
     ports:
       - "5437:5437"
     networks:
@@ -202,9 +202,9 @@ services:
 
 volumes:
   dbdata:
-  aphroconfuso.mt-v1-data/listmonk:
-  aphroconfuso.mt-v1-data/matomo:
-  aphroconfuso.mt-v1-data/strapi:
+    aphroconfuso.mt-v1-listmonk-data:
+    aphroconfuso.mt-v1-matomo-data:
+    aphroconfuso.mt-v1-strapi-data:
 
 networks:
   frontend:
