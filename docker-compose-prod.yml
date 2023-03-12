@@ -152,46 +152,97 @@ services:
       - backend
 
   strapi:
-    image: naskio/strapi
     container_name: strapi
+    build: ./aphroconfuso.mt-v1/strapi/
+    image: mystrapi:latest
     restart: unless-stopped
     environment:
-      NODE_ENV: production
-      DATABASE_CLIENT: postgres
+      DATABASE_CLIENT: ${STRAPI_CLIENT}
       DATABASE_HOST: postgresstrapi
-      DATABASE_PORT: 5437
-      DATABASE_NAME: ${STRAPI_DB}
-      DATABASE_USERNAME: ${STRAPI_USER}
-      DATABASE_PASSWORD: ${STRAPI_PASSWORD}
-      DATABASE_SSL: 0
+      DATABASE_NAME: ${STRAPI_NAME}
+      DATABASE_USERNAME: ${STRAPI_USERNAME}
+      DATABASE_PORT: ${STRAPI_PORT}
+      JWT_SECRET: ${STRAPI_JWT_SECRET}
+      ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
+      DATABASE_PASSWORD: ${STRAPI_STRAPI_PASSWORD}
+      NODE_ENV: production
     volumes:
-      - ./aphroconfuso.mt-v1/strapi/strapi-v4/app:/srv/app
+      - ./aphroconfuso.mt-v1/strapi/config:/opt/app/config
+      - ./aphroconfuso.mt-v1/strapi/src:/opt/app/src
+      - ./aphroconfuso.mt-v1/strapi/package.json:/opt/package.json
+      - ./aphroconfuso.mt-v1/strapi/package-lock.json:/opt/package-lock.json
+      # - ./aphroconfuso.mt-v1/strapi/.env:/opt/app/.env
+      - ./aphroconfuso.mt-v1/strapi/public/uploads:/opt/app/public/uploads
     ports:
-      - 1337:1337
+      - "1337:1337"
+    networks:
+      - strapi
+      - frontend
+    depends_on:
+      - postgresstrapi
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
       - "traefik.http.routers.cms.entrypoints=websecure"
       - "traefik.http.routers.cms.tls.certresolver=myresolver"
-    depends_on:
-      - postgresstrapi
-    networks:
-      - strapi
-      - frontend
 
   postgresstrapi:
     container_name: postgresstrapi
     restart: unless-stopped
-    image: postgres:15
+    image: postgres:14.5-alpine
     environment:
-      POSTGRES_DB: ${STRAPI_DB}
-      POSTGRES_USER: ${STRAPI_USER}
+      POSTGRES_USER: ${STRAPI_USERNAME}
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
-    command: -p 5437
+      POSTGRES_DB: ${STRAPI_NAME}
     volumes:
-      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
+      - strapi-data:/var/lib/postgresql/data/ #using a volume
+      #- ./data:/var/lib/postgresql/data/ # if you want to use a bind folder
+    ports:
+      - "5437:5437"
     networks:
       - strapi
+
+  # strapi:
+  #   image: naskio/strapi
+  #   container_name: strapi
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_CLIENT: postgres
+  #     DATABASE_HOST: postgresstrapi
+  #     DATABASE_PORT: 5437
+  #     DATABASE_NAME: ${STRAPI_DB}
+  #     DATABASE_USERNAME: ${STRAPI_USER}
+  #     DATABASE_PASSWORD: ${STRAPI_PASSWORD}
+  #     DATABASE_SSL: 0
+  #   volumes:
+  #     - ./aphroconfuso.mt-v1/strapi/app:/srv/app
+  #   ports:
+  #     - 1337:1337
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
+  #     - "traefik.http.routers.cms.entrypoints=websecure"
+  #     - "traefik.http.routers.cms.tls.certresolver=myresolver"
+  #   depends_on:
+  #     - postgresstrapi
+  #   networks:
+  #     - strapi
+  #     - frontend
+
+  # postgresstrapi:
+  #   container_name: postgresstrapi
+  #   restart: unless-stopped
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_DB: ${STRAPI_DB}
+  #     POSTGRES_USER: ${STRAPI_USER}
+  #     POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
+  #   command: -p 5437
+  #   volumes:
+  #     - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
+  #   networks:
+  #     - strapi
 
 volumes:
   dbdata:

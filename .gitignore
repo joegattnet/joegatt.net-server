@@ -6,4 +6,4 @@ acme.json
 letsencrypt
 *.mp4
 
-aphroconfuso.mt-strapi-dev/*
+aphroconfuso.mt-strapi-*
