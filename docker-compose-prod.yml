@@ -195,6 +195,7 @@ services:
       POSTGRES_DB: ${STRAPI_NAME}
     volumes:
       - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
+    command: -p 5437
     ports:
       - "5437:5437"
     networks:
