@@ -65,7 +65,6 @@ services:
       - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
       - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors.headers.addvaryheader=true"
-
     networks:
       - frontend
 

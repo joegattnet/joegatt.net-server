@@ -33,99 +33,6 @@ services:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  # factory:
-  #   container_name: factory.joegatt.net
-  #   build:
-  #     context: ./joegatt.net-factory
-  #   volumes:
-  #     - ./tmp/npm:/root/.npm:z
-  #     - ./joegatt.net-factory/src:/usr/src/app/src:z
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.factory.rule=Host(`factory.joegatt.net`, `factory.joegatt.org`)"
-  #     - "traefik.http.routers.factory.entrypoints=websecure"
-  #     - "traefik.http.routers.factory.tls.certresolver=myresolver"
-  #   networks:
-  #     - backend
-  #     - frontend
-  #   command: node ./dist/index.js
-  #   environment:
-  #     - NODE_ENV=production
-  #     - POSTGRES_DB=${JOEGATTNET_DB}
-  #     - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
-  #     - POSTGRES_USER=${JOEGATTNET_USER}
-  #   restart: always
-
-  # web:
-  #   container_name: web.joegatt.net
-  #   build:
-  #     context: ./joegatt.net-web
-  #   volumes:
-  #     - ./tmp/npm:/root/.npm:z
-  #     - ./joegatt.net-web/src:/usr/src/app/src:z
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.web.rule=Host(`v4.joegatt.net`)"
-  #     - "traefik.http.routers.web.entrypoints=websecure"
-  #     - "traefik.http.routers.web.tls.certresolver=myresolver"
-  #   networks:
-  #     - frontend
-  #   command: node ./src/index.js
-  # command: node ./dist/index.js
-  # restart: always
-
-  # graphql:
-  #   container_name: graphql
-  #   restart: always
-  #   image: graphile/postgraphile
-  #   environment:
-  #     DATABASE_URL: postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}
-  #     PORT: 5432
-  #   depends_on:
-  #     - postgres
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.graphql.rule=Host(`graphql.joegatt.net`, `graphql.joegatt.org`)"
-  #     - "traefik.http.routers.graphql.entrypoints=websecure"
-  #     - "traefik.http.routers.graphql.tls.certresolver=myresolver"
-  #   networks:
-  #     - backend
-  #     - frontend
-  #   command:
-  #     [
-  #       "-w",
-  #       "--cors",
-  #       "-c",
-  #       "postgres://${JOEGATTNET_USER}:${JOEGATTNET_PASSWORD}@postgres:5432/${JOEGATTNET_DB}",
-  #       "-s",
-  #       "api",
-  #       "--extended-errors",
-  #       "hint,detail,errcode",
-  #       "--jwt-secret",
-  #       $JWT_SECRET,
-  #       "--token",
-  #       "api.jwt_token",
-  #       "--default-role",
-  #       "unregistered",
-  #     ]
-  #   ports:
-  #     - 5433:5433
-
-  # postgres:
-  #   container_name: postgres
-  #   image: postgres:10
-  #   volumes:
-  #     - ./joegatt.net-db/init:/docker-entrypoint-initdb.d
-  #     - dbdata:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_DB=${JOEGATTNET_DB}
-  #     - POSTGRES_PASSWORD=${JOEGATTNET_PASSWORD}
-  #     - POSTGRES_USER=${JOEGATTNET_USER}
-  #   networks:
-  #     - backend
-  #   ports:
-  #     - 5432:5432
-
   v3joegattnet:
     container_name: v3.joegatt.net
     build:
@@ -139,24 +46,6 @@ services:
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
     networks:
       - frontend
-
-  # dbadmin:
-  #   container_name: dbadmin
-  #   image: adminer
-  #   depends_on:
-  #     - postgres
-  #     - postgreslistmonk
-  #   networks:
-  #     - backend
-  #     - frontend
-  #     - listmonk
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.dbadmin.rule=Host(`adminer.joegatt.net`, `adminer.joegatt.org`)"
-  #     - "traefik.http.routers.dbadmin.entrypoints=websecure"
-  #     - "traefik.http.routers.dbadmin.tls.certresolver=myresolver"
-  # - "traefik.http.routers.dbadmin.middlewares=dbauth"
-  # - "traefik.http.middlewares.dbauth.basicauth.users=${ADMINER_USER_PASSWORD}" # uncomment if you will secure db admin with password # substitute with your htpasswd string and escape dollar signs!
 
   # APHROCONFUSO ************************************************************
   # *************************************************************************
@@ -231,44 +120,44 @@ services:
       timeout: 5s
       retries: 6
 
-  # strapi:
-  #   container_name: strapi
-  #   image: naskio/strapi
-  #   environment:
-  #     NODE_ENV: production
-  #     DATABASE_CLIENT: postgres
-  #     DATABASE_NAME: ${STRAPI_DB}
-  #     DATABASE_HOST: postgresstrapi
-  #     DATABASE_PORT: 5433
-  #     DATABASE_USERNAME: ${STRAPI_USER}
-  #     DATABASE_PASSWORD: ${STRAPI_PASSWORD}
-  #   volumes:
-  #     - ./aphroconfuso.mt-v1/strapi:/srv/app
-  #   ports:
-  #     - "1337:1337"
-  #   depends_on:
-  #     - postgresstrapi
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
-  #     - "traefik.http.routers.cms.entrypoints=websecure"
-  #     - "traefik.http.routers.cms.tls.certresolver=myresolver"
-  #   networks:
-  #     - strapi
-  #     - frontend
+  strapi:
+    container_name: strapi
+    image: naskio/strapi
+    environment:
+      NODE_ENV: production
+      DATABASE_CLIENT: postgres
+      DATABASE_NAME: ${STRAPI_DB}
+      DATABASE_HOST: postgresforstrapi
+      DATABASE_PORT: 5433
+      DATABASE_USERNAME: ${STRAPI_USER}
+      DATABASE_PASSWORD: ${STRAPI_PASSWORD}
+    volumes:
+      - ./aphroconfuso.mt-v1/strapi:/srv/app
+    ports:
+      - "1337:1337"
+    depends_on:
+      - postgresforstrapi
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
+      - "traefik.http.routers.cms.entrypoints=websecure"
+      - "traefik.http.routers.cms.tls.certresolver=myresolver"
+    networks:
+      - strapi
+      - frontend
 
-  # postgresstrapi:
-  #   container_name: postgresstrapi
-  #   image: postgres
-  #   environment:
-  #     POSTGRES_DB: ${STRAPI_DB}
-  #     POSTGRES_USER: ${STRAPI_USER}
-  #     POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
-  #   command: -p 5433
-  #   volumes:
-  #     - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
-  #   networks:
-  #     - strapi
+  postgresforstrapi:
+    container_name: postgresforstrapi
+    image: postgres
+    environment:
+      POSTGRES_DB: ${STRAPI_DB}
+      POSTGRES_USER: ${STRAPI_USER}
+      POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
+    command: -p 5433
+    volumes:
+      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
+    networks:
+      - strapi
 
   matomo:
     container_name: matomo
