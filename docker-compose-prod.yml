@@ -203,7 +203,7 @@ services:
 volumes:
   aphroconfuso.mt-v1-listmonk-data:
   aphroconfuso.mt-v1-matomo-data:
-  aphroconfuso.mt-v1-strapi-data:
+  aphroconfuso.mt-v1-postgresstrapi-data:
 
 networks:
   frontend:
