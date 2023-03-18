@@ -157,7 +157,7 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_CLIENT: ${STRAPI_CLIENT}
-      DATABASE_HOST: postgresforstrapi
+      DATABASE_HOST: postgresstrapi
       DATABASE_NAME: ${STRAPI_NAME}
       DATABASE_USERNAME: ${STRAPI_USERNAME}
       DATABASE_PORT: ${STRAPI_PORT}
@@ -177,15 +177,15 @@ services:
       - strapi
       - frontend
     depends_on:
-      - postgresforstrapi
+      - postgresstrapi
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
       - "traefik.http.routers.cms.entrypoints=websecure"
       - "traefik.http.routers.cms.tls.certresolver=myresolver"
 
-  postgresforstrapi:
-    container_name: postgresforstrapi
+  postgresstrapi:
+    container_name: postgresstrapi
     restart: unless-stopped
     image: postgres:15-alpine
     environment:
@@ -193,7 +193,7 @@ services:
       POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
       POSTGRES_DB: ${STRAPI_NAME}
     volumes:
-      - aphroconfuso.mt-v1-strapi-data:/var/lib/postgresql/data
+      - aphroconfuso.mt-v1-postgresstrapi-data:/var/lib/postgresql/data
     command: -p 5437
     ports:
       - "5437:5437"
