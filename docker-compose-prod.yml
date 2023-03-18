@@ -165,6 +165,7 @@ services:
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
       DATABASE_PASSWORD: ${STRAPI_PASSWORD}
       APP_KEYS: ${STRAPI_APP_KEYS}
+      API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT}
       NODE_ENV: production
     volumes:
       - ./aphroconfuso.mt-v1/strapi/config:/opt/app/config
