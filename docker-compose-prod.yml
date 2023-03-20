@@ -126,6 +126,7 @@ services:
     volumes:
       - ./aphroconfuso.mt-v1/matomo/config:/var/www/html/config
       - ./aphroconfuso.mt-v1/matomo/logs:/var/www/html/logs
+      - ./aphroconfuso.mt-v1/matomo/misc:/var/www/html/misc/
     environment:
       - MATOMO_DATABASE_HOST=mariadbmatomo
     labels:
