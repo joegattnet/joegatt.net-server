@@ -168,12 +168,6 @@ services:
       APP_KEYS: ${STRAPI_APP_KEYS}
       API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT}
       NODE_ENV: production
-    # volumes:
-    #   - ./aphroconfuso.mt-strapi/config:/opt/app/config
-    #   - ./aphroconfuso.mt-strapi/src:/opt/app/src
-    #   - ./aphroconfuso.mt-strapi/package.json:/opt/package.json
-    #   - ./aphroconfuso.mt-strapi/package-lock.json:/opt/package-lock.json
-    #   - ./aphroconfuso.mt-strapi/public/uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
     networks:
