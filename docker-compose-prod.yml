@@ -84,7 +84,8 @@ services:
       - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
       - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors.headers.addvaryheader=true"
-      - "traefik.http.middlewares.aphroconfusomt.basicauth.users=${APHROCONFUSOMT_BASICAUTH}"
+      - "traefik.http.middlewares.test-auth.basicauth.users=${APHROCONFUSOMT_BASICAUTH}"
+      - "traefik.http.routers.v0aphroconfuso.middlewares=test-auth"
     networks:
       - frontend
 
