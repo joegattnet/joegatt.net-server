@@ -85,7 +85,7 @@ services:
       - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors.headers.addvaryheader=true"
       - "traefik.http.middlewares.test-auth.basicauth.users=${APHROCONFUSOMT_BASICAUTH}"
-      - "traefik.http.routers.v0aphroconfuso.middlewares=test-auth"
+      - "traefik.http.routers.aphroconfusomt.middlewares=test-auth"
     networks:
       - frontend
 
