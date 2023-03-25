@@ -68,26 +68,26 @@ services:
     networks:
       - frontend
 
-  aphroconfusomt:
-    container_name: aphroconfuso.mt
-    build:
-      context: ./aphroconfuso.mt
-    volumes:
-      - ./aphroconfuso.mt:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.aphroconfusomt.rule=Host(`v1.aphroconfuso.mt`)"
-      - "traefik.http.routers.aphroconfusomt.entrypoints=websecure"
-      - "traefik.http.routers.aphroconfusomt.tls.certresolver=myresolver"
-      - "traefik.http.routers.aphroconfusomt.middlewares=cors"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
-      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
-      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
-      - "traefik.http.routers.aphroconfusomt.middlewares=test-auth"
-    networks:
-      - frontend
+  # aphroconfusomt:
+  #   container_name: aphroconfuso.mt
+  #   build:
+  #     context: ./aphroconfuso.mt
+  #   volumes:
+  #     - ./aphroconfuso.mt:/usr/share/nginx/html
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.aphroconfusomt.rule=Host(`v1.aphroconfuso.mt`)"
+  #     - "traefik.http.routers.aphroconfusomt.entrypoints=websecure"
+  #     - "traefik.http.routers.aphroconfusomt.tls.certresolver=myresolver"
+  #     - "traefik.http.routers.aphroconfusomt.middlewares=cors"
+  #     - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+  #     - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
+  #     - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
+  #     - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+  #     - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
+  #     - "traefik.http.routers.aphroconfusomt.middlewares=test-auth"
+  #   networks:
+  #     - frontend
 
   # eleventy:
   #   container_name: aphroconfuso.mt-eleventy
