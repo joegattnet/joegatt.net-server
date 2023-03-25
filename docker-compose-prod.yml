@@ -68,6 +68,45 @@ services:
     networks:
       - frontend
 
+  aphroconfusomt:
+    container_name: aphroconfuso.mt
+    build:
+      context: ./aphroconfuso.mt
+    volumes:
+      - ./aphroconfuso.mt:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.aphroconfusomt.rule=Host(`v1.aphroconfuso.mt`)"
+      - "traefik.http.routers.aphroconfusomt.entrypoints=websecure"
+      - "traefik.http.routers.aphroconfusomt.tls.certresolver=myresolver"
+      - "traefik.http.routers.aphroconfusomt.middlewares=cors"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
+      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+      - "traefik.http.middlewares.aphroconfusomt.basicauth.users=${APHROCONFUSOMT_BASICAUTH}"
+    networks:
+      - frontend
+
+  # eleventy:
+  #   container_name: aphroconfuso.mt-eleventy
+  #   build:
+  #     context: ./aphroconfuso.mt
+  #   volumes:
+  #     - ./aphroconfuso.mt:/usr/share/nginx/html
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.eleventy.rule=Host(`provi.aphroconfuso.mt`)"
+  #     - "traefik.http.routers.eleventy.entrypoints=websecure"
+  #     - "traefik.http.routers.eleventy.tls.certresolver=myresolver"
+  #     - "traefik.http.routers.eleventy.middlewares=cors"
+  #     - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+  #     - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://provi.aphroconfuso.mt,https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
+  #     - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
+  #     - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+  #   networks:
+  #     - frontend
+
   listmonk:
     container_name: listmonk
     restart: unless-stopped
