@@ -203,6 +203,9 @@ services:
       APP_KEYS: ${STRAPI_APP_KEYS}
       API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT}
       NODE_ENV: production
+      MAIL_KEY: ${MAIL_KEY}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_URL: ${MAIL_URL}
     ports:
       - "1337:1337"
     networks:
