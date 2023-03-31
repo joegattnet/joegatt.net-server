@@ -24,8 +24,6 @@ services:
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
-    networks:
-      - frontend
     ports:
       - "443:443"
       - "8080:8080"
@@ -44,8 +42,6 @@ services:
       - "traefik.http.routers.v3joegattnet.rule=Host(`v3.joegatt.net`, `joegatt.net`, `www.joegatt.net`)"
       - "traefik.http.routers.v3joegattnet.entrypoints=websecure"
       - "traefik.http.routers.v3joegattnet.tls.certresolver=myresolver"
-    networks:
-      - frontend
 
   # APHROCONFUSO ************************************************************
   # *************************************************************************
@@ -66,8 +62,6 @@ services:
       - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
       - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors.headers.addvaryheader=true"
-    networks:
-      - frontend
 
   aphroconfusomt:
     container_name: aphroconfusomt
@@ -82,8 +76,6 @@ services:
       - "traefik.http.routers.aphroconfusomt.tls.certresolver=myresolver"
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
       - "traefik.http.routers.aphroconfusomt.middlewares=test-auth"
-    networks:
-      - frontend
 
   # eleventy:
   #   container_name: aphroconfuso.mt-eleventy
@@ -101,8 +93,6 @@ services:
   #     - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://provi.aphroconfuso.mt,https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
   #     - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
   #     - "traefik.http.middlewares.cors.headers.addvaryheader=true"
-  #   networks:
-  #     - frontend
 
   proviaphroconfusomt:
     container_name: proviaphroconfusomt
@@ -117,8 +107,6 @@ services:
       - "traefik.http.routers.provi.tls.certresolver=myresolver"
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
       - "traefik.http.routers.provi.middlewares=test-auth"
-    networks:
-      - frontend
 
   edituriaphroconfusomt:
     container_name: edituriaphroconfusomt
@@ -133,8 +121,6 @@ services:
       - "traefik.http.routers.edituri.tls.certresolver=myresolver"
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
       - "traefik.http.routers.edituri.middlewares=test-auth"
-    networks:
-      - frontend
 
   listmonk:
     container_name: listmonk
@@ -144,9 +130,6 @@ services:
       - "9000:9000"
     environment:
       - TZ=Etc/GMT+1
-    networks:
-      - frontend
-      - listmonk
     depends_on:
       - postgreslistmonk
     command:
@@ -172,8 +155,6 @@ services:
     ports:
       - "9433:5432"
     command: -p 9433
-    networks:
-      - listmonk
     environment:
       - POSTGRES_DB=${LISTMONK_DB}
       - POSTGRES_PASSWORD=${LISTMONK_PASSWORD}
@@ -202,9 +183,6 @@ services:
       - "traefik.http.routers.matomo.rule=Host(`analitika.aphroconfuso.mt`)"
       - "traefik.http.routers.matomo.entrypoints=websecure"
       - "traefik.http.routers.matomo.tls.certresolver=myresolver"
-    networks:
-      - matomo
-      - frontend
 
   mariadbmatomo:
     container_name: mariadbmatomo
@@ -215,9 +193,6 @@ services:
       - aphroconfuso.mt-v1-matomo-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    networks:
-      - matomo
-      - backend
 
   strapi:
     container_name: strapi
@@ -241,9 +216,6 @@ services:
       MAIL_URL: ${MAIL_URL}
     ports:
       - "1337:1337"
-    networks:
-      - strapi
-      - frontend
     depends_on:
       - postgresstrapi
     labels:
@@ -265,22 +237,8 @@ services:
     command: -p 5437
     ports:
       - "5437:5437"
-    networks:
-      - strapi
 
 volumes:
   aphroconfuso.mt-v1-listmonk-data:
   aphroconfuso.mt-v1-matomo-data:
   aphroconfuso.mt-v1-postgresstrapi-data:
-
-networks:
-  frontend:
-    external: true
-  backend:
-    external: false
-  listmonk:
-    external: true
-  matomo:
-    external: true
-  strapi:
-    external: true
