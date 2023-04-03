@@ -15,8 +15,8 @@ cd aphroconfuso.mt-backups
 docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-listmonk-backup.sql.gz
 
-docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
-gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-listmonk-backup.sql.gz
+docker exec -i postgresstrapi /usr/bin/pg_dump -p 9433 -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
+gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-strapi-backup.sql.gz
 
 rm *-backup.sql.gz
 
