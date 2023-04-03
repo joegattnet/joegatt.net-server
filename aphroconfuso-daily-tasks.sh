@@ -1,4 +1,4 @@
-echo "running..."
+echo "Running 002"
 
 # import variables
 eval "$(
