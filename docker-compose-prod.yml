@@ -228,9 +228,9 @@ services:
     restart: unless-stopped
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: ${STRAPI_USERNAME}
-      POSTGRES_PASSWORD: ${STRAPI_PASSWORD}
-      POSTGRES_DB: ${STRAPI_NAME}
+      POSTGRES_USER: ${STRAPI_DB_USERNAME}
+      POSTGRES_PASSWORD: ${STRAPI_DB_PASSWORD}
+      POSTGRES_DB: ${STRAPI_DB}
     volumes:
       - aphroconfuso.mt-v1-postgresstrapi-data:/var/lib/postgresql/data
     command: -p 5437
