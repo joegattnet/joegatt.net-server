@@ -1,4 +1,4 @@
-echo "Running 002"
+echo "Running 003"
 
 # import variables
 eval "$(
@@ -14,7 +14,7 @@ cd aphroconfuso.mt-backups
 
 # Backup databases
 docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
-gpg -c --passphrase $GPG_PASSPHRASE --batch postgres-listmonk-backup.sql.gz
+gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-listmonk-backup.sql.gz
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa_deploykey_unsigned
