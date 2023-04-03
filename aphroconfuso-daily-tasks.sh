@@ -10,7 +10,7 @@ eval "$(
 )"
 
 # Backup LISTMONK database
-docker exec -i postgreslistmonk /usr/bin/pg_dump -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
+docker exec -i postgreslistmonk /usr/bin/pg_dump -P 9433 -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa_deploykey_unsigned
