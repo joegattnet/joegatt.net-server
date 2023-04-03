@@ -26,7 +26,6 @@ services:
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
     ports:
       - "443:443"
-      - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -139,10 +138,10 @@ services:
         "yes | ./listmonk --install --idempotent --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml --static-dir=/listmonk/static --i18n-dir=/listmonk/i18n",
       ]
     volumes:
-      - ./aphroconfuso.mt-v1/listmonk/config.toml:/listmonk/config.toml
-      - ./aphroconfuso.mt-v1/listmonk/i18n:/listmonk/i18n
-      - ./aphroconfuso.mt-v1/listmonk/static:/listmonk/static
-      - ./aphroconfuso.mt-v1/listmonk/uploads:/listmonk/uploads
+      - ./aphroconfuso.mt-config/listmonk/config.toml:/listmonk/config.toml
+      - ./aphroconfuso.mt-config/listmonk/i18n:/listmonk/i18n
+      - ./aphroconfuso.mt-config/listmonk/static:/listmonk/static
+      - ./aphroconfuso.mt-config/listmonk/uploads:/listmonk/uploads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.listmonk.rule=Host(`newsletter.aphroconfuso.mt`)"
@@ -173,9 +172,9 @@ services:
     image: "matomo:4.14.1"
     restart: always
     volumes:
-      - ./aphroconfuso.mt-v1/matomo/config:/var/www/html/config
-      - ./aphroconfuso.mt-v1/matomo/logs:/var/www/html/logs
-      - ./aphroconfuso.mt-v1/matomo/misc:/var/www/html/misc/
+      - ./aphroconfuso.mt-config/matomo/config:/var/www/html/config
+      - ./aphroconfuso.mt-config/matomo/logs:/var/www/html/logs
+      - ./aphroconfuso.mt-config/matomo/misc:/var/www/html/misc/
     environment:
       - MATOMO_DATABASE_HOST=mariadbmatomo
     labels:

@@ -1,0 +1,1 @@
+echo $LISTMONK_USER
