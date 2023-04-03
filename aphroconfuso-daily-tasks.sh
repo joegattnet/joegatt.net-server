@@ -9,17 +9,20 @@ eval "$(
   done
 )"
 
-
 cd aphroconfuso.mt-backups
 
 # Backup databases
 docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-listmonk-backup.sql.gz
-rm postgres-listmonk-backup.sql.gz
+
+docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
+gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-listmonk-backup.sql.gz
+
+rm *-backup.sql.gz
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa_deploykey_unsigned
 
 git add .
-git commit -m "Automatically added by aphroconfuso-daily-taska.sh"
+git commit -m "Automatically added by aphroconfuso-daily-tasks.sh"
 git push
