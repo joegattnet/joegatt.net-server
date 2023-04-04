@@ -76,22 +76,19 @@ services:
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
       - "traefik.http.routers.aphroconfusomt.middlewares=test-auth"
 
-  # eleventy:
-  #   container_name: aphroconfuso.mt-eleventy
-  #   build:
-  #     context: ./aphroconfuso.mt
-  #   volumes:
-  #     - ./aphroconfuso.mt-eleventy:/usr/share/nginx/html
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.eleventy.rule=Host(`eleventy.aphroconfuso.mt`)"
-  #     - "traefik.http.routers.eleventy.entrypoints=websecure"
-  #     - "traefik.http.routers.eleventy.tls.certresolver=myresolver"
-  #     - "traefik.http.routers.eleventy.middlewares=cors"
-  #     - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-  #     - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://provi.aphroconfuso.mt,https://newsletter.aphroconfuso.mt,https://v1.aphroconfuso.mt,https://aphroconfuso.mt"
-  #     - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
-  #     - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+  eleventy:
+    container_name: aphroconfuso.mt-eleventy
+    build:
+      context: ./aphroconfuso.mt-eleventy
+    volumes:
+      - ./aphroconfuso.mt-eleventy:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.eleventy.rule=Host(`eleventy.aphroconfuso.mt`)"
+      - "traefik.http.routers.eleventy.entrypoints=websecure"
+      - "traefik.http.routers.eleventy.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$3QA3lE4e3p.hr4FvMslP0.gN4vayHnZyizJYZBT7tGgz1f.tFesTq"
+      - "traefik.http.routers.eleventy.middlewares=test-auth"
 
   proviaphroconfusomt:
     container_name: proviaphroconfusomt
@@ -110,9 +107,9 @@ services:
   edituriaphroconfusomt:
     container_name: edituriaphroconfusomt
     build:
-      context: ./aphroconfuso.mt-provi
+      context: ./aphroconfuso.mt-elevnty/aphroconfuso.mt
     volumes:
-      - ./aphroconfuso.mt-provi:/usr/share/nginx/html
+      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.edituri.rule=Host(`edituri.aphroconfuso.mt`)"
