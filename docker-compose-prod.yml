@@ -81,8 +81,8 @@ services:
     build:
       context: ./aphroconfuso.mt-eleventy
     volumes:
-      - ./aphroconfuso.mt-eleventy:/usr/share/nginx/html
-      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt:/usr/share/nginx/html/aphroconfuso.mt
+      - ./aphroconfuso.mt-eleventy:/usr/src/app
+      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt:/usr/src/app/aphroconfuso.mt
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.eleventy.rule=Host(`eleventy.aphroconfuso.mt`)"
