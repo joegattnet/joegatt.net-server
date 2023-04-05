@@ -16,6 +16,10 @@ eval "$(
 
 cd aphroconfuso.mt-backups
 
+
+# Delete existing files
+rm *-backup.sql.gz.gpg
+
 # Backup databases
 docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --quiet postgres-listmonk-backup.sql.gz
@@ -35,5 +39,3 @@ ssh-add ~/.ssh/id_rsa_deploykey_unsigned
 
 git add .
 git commit -m "Automatically added by aphroconfuso-daily-tasks.sh"
-git push
-git stash
