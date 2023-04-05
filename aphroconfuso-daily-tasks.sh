@@ -36,3 +36,4 @@ ssh-add ~/.ssh/id_rsa_deploykey_unsigned
 git add .
 git commit -m "Automatically added by aphroconfuso-daily-tasks.sh"
 git push
+git stash
