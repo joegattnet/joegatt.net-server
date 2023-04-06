@@ -67,7 +67,7 @@ services:
     build:
       context: ./aphroconfuso.mt
     volumes:
-      - ./aphroconfuso.mt:/usr/share/nginx/html
+      - ./aphroconfuso.mt/site:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.aphroconfusomt.rule=Host(`v1.aphroconfuso.mt`)"
@@ -82,7 +82,7 @@ services:
       context: ./aphroconfuso.mt-eleventy
     volumes:
       - ./aphroconfuso.mt-eleventy:/usr/src/app
-      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt:/usr/src/app/aphroconfuso.mt
+      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/src/app/aphroconfuso.mt
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.eleventy.rule=Host(`eleventy.aphroconfuso.mt`)"
@@ -94,9 +94,9 @@ services:
   proviaphroconfusomt:
     container_name: proviaphroconfusomt
     build:
-      context: ./aphroconfuso.mt
+      context: ./aphroconfuso.mt-provi
     volumes:
-      - ./aphroconfuso.mt:/usr/share/nginx/html
+      - ./aphroconfuso.mt-provi/site:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.provi.rule=Host(`provi.aphroconfuso.mt`)"
