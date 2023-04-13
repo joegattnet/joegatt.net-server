@@ -105,6 +105,20 @@ services:
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
       - "traefik.http.routers.provi.middlewares=test-auth"
 
+  stagingaphroconfusomt:
+    container_name: stagingaphroconfusomt
+    build:
+      context: ./aphroconfuso.mt-provi/site
+    volumes:
+      - ./aphroconfuso.mt-provi/site:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.staging.rule=Host(`staging.aphroconfuso.mt`)"
+      - "traefik.http.routers.staging.entrypoints=websecure"
+      - "traefik.http.routers.staging.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
+      - "traefik.http.routers.staging.middlewares=test-auth"
+
   edituriaphroconfusomt:
     container_name: edituriaphroconfusomt
     build:
