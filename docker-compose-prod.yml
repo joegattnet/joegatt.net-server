@@ -110,6 +110,7 @@ services:
     container_name: edituriaphroconfusomt
     build:
       context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
+      dockerfile: ./aphroconfuso.mt-eleventy/aphroconfuso.mt/Dockerfile
     volumes:
       - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/share/nginx/html
     labels:
