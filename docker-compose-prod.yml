@@ -211,7 +211,7 @@ services:
     depends_on:
       - postgresstrapi
     volumes:
-      - ./aphroconfuso.mt-strapi/public/uploads:/var/www/html/public/uploads
+      - ./aphroconfuso.mt-strapi/public/uploads:/opt/app/public/uploads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
