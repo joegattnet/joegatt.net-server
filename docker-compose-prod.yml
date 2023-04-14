@@ -95,6 +95,7 @@ services:
     container_name: proviaphroconfusomt
     build:
       context: ./aphroconfuso.mt-provi
+      dockerfile: ./aphroconfuso.mt-provi/Dockerfile
     volumes:
       - ./aphroconfuso.mt-provi/site:/usr/share/nginx/html
     labels:
