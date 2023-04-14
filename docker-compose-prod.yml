@@ -91,26 +91,26 @@ services:
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
       - "traefik.http.routers.eleventy.middlewares=test-auth"
 
-  stagingaphroconfusomt:
-    container_name: stagingaphroconfusomt
+  proviaphroconfusomt:
+    container_name: proviaphroconfusomt
     build:
-      context: ./aphroconfuso.mt-provi/site
+      context: ./aphroconfuso.mt-provi
     volumes:
       - ./aphroconfuso.mt-provi/site:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.staging.rule=Host(`staging.aphroconfuso.mt`)"
-      - "traefik.http.routers.staging.entrypoints=websecure"
-      - "traefik.http.routers.staging.tls.certresolver=myresolver"
+      - "traefik.http.routers.provi.rule=Host(`provi.aphroconfuso.mt`)"
+      - "traefik.http.routers.provi.entrypoints=websecure"
+      - "traefik.http.routers.provi.tls.certresolver=myresolver"
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-      - "traefik.http.routers.staging.middlewares=test-auth"
+      - "traefik.http.routers.provi.middlewares=test-auth"
 
   edituriaphroconfusomt:
     container_name: edituriaphroconfusomt
     build:
-      context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site
+      context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
     volumes:
-      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/src/app/aphroconfuso.mt
+      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.edituri.rule=Host(`edituri.aphroconfuso.mt`)"
@@ -210,6 +210,8 @@ services:
       - "1337:1337"
     depends_on:
       - postgresstrapi
+    volumes:
+      - ./aphroconfuso.mt-strapi/public/uploads:/var/www/html/public/uploads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
