@@ -95,9 +95,8 @@ services:
     container_name: proviaphroconfusomt
     build:
       context: ./aphroconfuso.mt-provi
-      dockerfile: ./aphroconfuso.mt-provi/Dockerfile
     volumes:
-      - ./aphroconfuso.mt-provi/site:/usr/share/nginx/html
+      - ./aphroconfuso.mt-provi/site:/var/www/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.provi.rule=Host(`provi.aphroconfuso.mt`)"
