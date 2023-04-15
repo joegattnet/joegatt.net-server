@@ -96,8 +96,7 @@ services:
     build:
       context: ./aphroconfuso.mt-provi
     volumes:
-      - ./aphroconfuso.mt-provi/site:/var/www/html
-      - ./aphroconfuso.mt-provi/default.conf:/etc/nginx/conf.d/default.conf
+      - ./aphroconfuso.mt-provi/site:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.provi.rule=Host(`provi.aphroconfuso.mt`)"
@@ -110,7 +109,6 @@ services:
     container_name: edituriaphroconfusomt
     build:
       context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
-      dockerfile: ./aphroconfuso.mt-eleventy/aphroconfuso.mt/Dockerfile
     volumes:
       - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/share/nginx/html
     labels:
