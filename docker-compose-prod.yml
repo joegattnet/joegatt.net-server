@@ -119,6 +119,16 @@ services:
       - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
       - "traefik.http.routers.edituri.middlewares=test-auth"
 
+  stampiaphroconfusomt:
+    container_name: stampiaphroconfusomt
+    build:
+      context: ./aphroconfuso.mt-stampi
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stampi.rule=Host(`stampi.aphroconfuso.mt`)"
+      - "traefik.http.routers.provi.entrypoints=websecure"
+      - "traefik.http.routers.provi.tls.certresolver=myresolver"
+
   listmonk:
     container_name: listmonk
     restart: unless-stopped
@@ -211,7 +221,7 @@ services:
     depends_on:
       - postgresstrapi
     volumes:
-      - ./aphroconfuso.mt-strapi/public/uploads:/opt/app/public/uploads
+      - ./aphroconfuso.mt-stampi:/opt/app/public/uploads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
