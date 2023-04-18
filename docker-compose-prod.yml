@@ -122,8 +122,9 @@ services:
   stampiaphroconfusomt:
     container_name: stampiaphroconfusomt
     build:
-      context: ./aphroconfuso.mt-stampi/stampi
-      dockerfile: ./aphroconfuso.mt-stampi/Dockerfile
+      context: ./aphroconfuso.mt-stampi
+    volumes:
+      - ./aphroconfuso.mt-provi/stampi:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.stampi.rule=Host(`stampi.aphroconfuso.mt`)"
