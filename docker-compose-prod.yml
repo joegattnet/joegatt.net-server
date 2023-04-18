@@ -122,7 +122,7 @@ services:
   stampiaphroconfusomt:
     container_name: stampiaphroconfusomt
     build:
-      context: ./aphroconfuso.mt-stampi
+      context: ./aphroconfuso.mt-stampi/stampi
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.stampi.rule=Host(`stampi.aphroconfuso.mt`)"
@@ -221,7 +221,7 @@ services:
     depends_on:
       - postgresstrapi
     volumes:
-      - ./aphroconfuso.mt-stampi:/opt/app/public/uploads
+      - ./aphroconfuso.mt-stampi/stampi:/opt/app/public/uploads
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cms.rule=Host(`cms.aphroconfuso.mt`)"
