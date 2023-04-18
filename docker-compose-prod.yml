@@ -130,11 +130,6 @@ services:
       - "traefik.http.routers.stampi.rule=Host(`stampi.aphroconfuso.mt`)"
       - "traefik.http.routers.stampi.entrypoints=websecure"
       - "traefik.http.routers.stampi.tls.certresolver=myresolver"
-      - "traefik.http.routers.stampi.middlewares=cors"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET"
-      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,https://cms.aphroconfuso.mt"
-      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
 
   listmonk:
     container_name: listmonk
