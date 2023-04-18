@@ -16,7 +16,6 @@ eval "$(
 
 cd aphroconfuso.mt-backups
 
-
 # Delete existing files
 rm *-backup.sql.gz.gpg
 

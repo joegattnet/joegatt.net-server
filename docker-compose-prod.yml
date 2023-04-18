@@ -46,7 +46,7 @@ services:
   # *************************************************************************
 
   v0aphroconfuso:
-    container_name: v0.aphroconfuso
+    container_name: v0aphroconfuso
     build:
       context: ./aphroconfuso-v0
     volumes:
