@@ -39,3 +39,10 @@ ssh-add ~/.ssh/id_rsa_deploykey_unsigned
 
 git add .
 git commit -m "Automatically added by aphroconfuso-daily-tasks.sh"
+git push
+
+cd ..
+cd aphroconfuso.mt-stampi
+git add .
+git commit -m "Automatically added by aphroconfuso-daily-tasks.sh"
+git push
