@@ -126,8 +126,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.stampi.rule=Host(`stampi.aphroconfuso.mt`)"
-      - "traefik.http.routers.provi.entrypoints=websecure"
-      - "traefik.http.routers.provi.tls.certresolver=myresolver"
+      - "traefik.http.routers.stampi.entrypoints=websecure"
+      - "traefik.http.routers.stampi.tls.certresolver=myresolver"
 
   listmonk:
     container_name: listmonk
