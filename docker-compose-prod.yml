@@ -131,10 +131,10 @@ services:
       - "traefik.http.routers.stampi.entrypoints=websecure"
       - "traefik.http.routers.stampi.tls.certresolver=myresolver"
       - "traefik.http.routers.stampi.middlewares=cors"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=https://cms.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt"
-      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+      - "traefik.http.middlewares.stampi.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.stampi.headers.accesscontrolalloworiginlist=https://cms.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt"
+      - "traefik.http.middlewares.stampi.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.stampi.headers.addvaryheader=true"
 
   listmonk:
     container_name: listmonk
