@@ -130,7 +130,7 @@ services:
       - "traefik.http.routers.stampi.rule=Host(`stampi.aphroconfuso.mt`)"
       - "traefik.http.routers.stampi.entrypoints=websecure"
       - "traefik.http.routers.stampi.tls.certresolver=myresolver"
-      - "traefik.http.routers.stampi.middlewares=cors"
+      - "traefik.http.routers.stampi.middlewares=cors2"
       - "traefik.http.middlewares.stampi.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
       - "traefik.http.middlewares.stampi.headers.accesscontrolalloworiginlist=https://cms.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt"
       - "traefik.http.middlewares.stampi.headers.accesscontrolmaxage=100"
