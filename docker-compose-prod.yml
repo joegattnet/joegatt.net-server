@@ -58,7 +58,7 @@ services:
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
       - "traefik.http.routers.v0aphroconfuso.middlewares=cors-v0"
       - "traefik.http.middlewares.cors-v0.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors-v0.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt"
+      - "traefik.http.middlewares.cors-v0.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081"
       - "traefik.http.middlewares.cors-v0.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors-v0.headers.addvaryheader=true"
 
