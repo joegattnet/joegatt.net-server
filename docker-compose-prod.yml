@@ -53,14 +53,9 @@ services:
       - ./aphroconfuso-v0:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.v0aphroconfuso.rule=Host(`aphroconfuso.mt`)"
+      - "traefik.http.routers.v0aphroconfuso.rule=Host(`v0.aphroconfuso.mt`)"
       - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-      - "traefik.http.routers.v0aphroconfuso.middlewares=cors-v0"
-      - "traefik.http.middlewares.cors-v0.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors-v0.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081"
-      - "traefik.http.middlewares.cors-v0.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors-v0.headers.addvaryheader=true"
 
   aphroconfusomt:
     container_name: aphroconfusomt
@@ -70,11 +65,14 @@ services:
       - ./aphroconfuso.mt/site:/usr/share/nginx/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.aphroconfusomt.rule=Host(`v1.aphroconfuso.mt`)"
+      - "traefik.http.routers.aphroconfusomt.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.aphroconfusomt.entrypoints=websecure"
       - "traefik.http.routers.aphroconfusomt.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-      - "traefik.http.routers.aphroconfusomt.middlewares=test-auth"
+      - "traefik.http.routers.v0aphroconfuso.middlewares=cors-mt"
+      - "traefik.http.middlewares.cors-mt.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.cors-mt.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081"
+      - "traefik.http.middlewares.cors-mt.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.cors-mt.headers.addvaryheader=true"
 
   eleventy:
     container_name: aphroconfuso.mt-eleventy
