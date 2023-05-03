@@ -56,7 +56,7 @@ services:
       - "traefik.http.routers.aphroconfuso.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.aphroconfuso.entrypoints=websecure"
       - "traefik.http.routers.aphroconfuso.tls.certresolver=myresolver"
-      - "traefik.http.routers.aphroconfusomt.middlewares=cors-mt"
+      - "traefik.http.routers.aphroconfuso.middlewares=cors-mt"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolmaxage=100"
