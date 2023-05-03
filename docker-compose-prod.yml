@@ -45,18 +45,6 @@ services:
   # APHROCONFUSO ************************************************************
   # *************************************************************************
 
-  v0aphroconfuso:
-    container_name: v0aphroconfuso
-    build:
-      context: ./aphroconfuso-v0
-    volumes:
-      - ./aphroconfuso-v0:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.v0aphroconfuso.rule=Host(`v0.aphroconfuso.mt`)"
-      - "traefik.http.routers.v0aphroconfuso.entrypoints=websecure"
-      - "traefik.http.routers.v0aphroconfuso.tls.certresolver=myresolver"
-
   aphroconfusomt:
     container_name: aphroconfusomt
     build:
@@ -68,7 +56,7 @@ services:
       - "traefik.http.routers.aphroconfusomt.rule=Host(`aphroconfuso.mt`)"
       - "traefik.http.routers.aphroconfusomt.entrypoints=websecure"
       - "traefik.http.routers.aphroconfusomt.tls.certresolver=myresolver"
-      - "traefik.http.routers.v0aphroconfuso.middlewares=cors-mt"
+      - "traefik.http.routers.aphroconfusomt-assets.middlewares=cors-mt"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolmaxage=100"
