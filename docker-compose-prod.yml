@@ -58,7 +58,7 @@ services:
       - "traefik.http.routers.aphroconfuso.tls.certresolver=myresolver"
       - "traefik.http.routers.aphroconfusomt.middlewares=cors-mt"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors-mt.headers.accesscontrolalloworiginlist=https://newsletter.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081"
+      - "traefik.http.middlewares.cors-mt.headers.accesscontrolalloworiginlist=*"
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors-mt.headers.addvaryheader=true"
 
@@ -118,7 +118,7 @@ services:
       - "traefik.http.routers.stampi.tls.certresolver=myresolver"
       - "traefik.http.routers.stampiaphroconfusomt.middlewares=cors-stampi"
       - "traefik.http.middlewares.cors-stampi.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.cors-stampi.headers.accesscontrolalloworiginlist=https://cms.aphroconfuso.mt,https://aphroconfuso.mt,https://provi.aphroconfuso.mt,http://localhost:8080,http://localhost:8081,http://localhost:1337"
+      - "traefik.http.middlewares.cors-stampi.headers.accesscontrolalloworiginlist=*"
       - "traefik.http.middlewares.cors-stampi.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors-stampi.headers.addvaryheader=true"
 
