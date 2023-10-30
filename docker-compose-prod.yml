@@ -2,6 +2,7 @@ services:
   traefik:
     image: "traefik:v2.5"
     container_name: "traefik"
+    restart: always
     network_mode: "host"
     command:
       - "--log.level=WARN"
@@ -32,6 +33,7 @@ services:
 
   v3joegattnet:
     container_name: v3.joegatt.net
+    restart: always
     build:
       context: ./joegatt.net-v3-html
     volumes:
@@ -47,6 +49,7 @@ services:
 
   aphroconfusomt:
     container_name: aphroconfusomt
+    restart: always
     build:
       context: ./aphroconfuso.mt
     volumes:
@@ -65,6 +68,7 @@ services:
 
   eleventy:
     container_name: aphroconfuso.mt-eleventy
+    restart: always
     build:
       context: ./aphroconfuso.mt-eleventy
     volumes:
@@ -80,6 +84,7 @@ services:
 
   proviaphroconfusomt:
     container_name: proviaphroconfusomt
+    restart: always
     build:
       context: ./aphroconfuso.mt-provi
     volumes:
@@ -94,6 +99,7 @@ services:
 
   edituriaphroconfusomt:
     container_name: edituriaphroconfusomt
+    restart: always
     build:
       context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
     volumes:
@@ -108,6 +114,7 @@ services:
 
   stampiaphroconfusomt:
     container_name: stampiaphroconfusomt
+    restart: always
     build:
       context: ./aphroconfuso.mt-stampi
     volumes:
@@ -126,7 +133,7 @@ services:
 
   listmonk:
     container_name: listmonk
-    restart: unless-stopped
+    restart: always
     image: listmonk/listmonk:latest
     ports:
       - "9000:9000"
@@ -159,6 +166,7 @@ services:
 
   postgreslistmonk:
     container_name: postgreslistmonk
+    restart: always
     image: postgres:11
     ports:
       - "9433:5432"
@@ -167,14 +175,13 @@ services:
       - POSTGRES_DB=${LISTMONK_DB}
       - POSTGRES_PASSWORD=${LISTMONK_PASSWORD}
       - POSTGRES_USER=${LISTMONK_USER}
-    restart: unless-stopped
     volumes:
       - aphroconfuso.mt-v1-listmonk-data:/var/lib/postgresql/data
 
   matomo:
     container_name: matomo
-    image: "matomo:4.14.1"
     restart: always
+    image: "matomo:4.14.1"
     volumes:
       - ./aphroconfuso.mt-config/matomo/config:/var/www/html/config
       - ./aphroconfuso.mt-config/matomo/logs:/var/www/html/logs
@@ -189,9 +196,9 @@ services:
 
   mariadbmatomo:
     container_name: mariadbmatomo
+    restart: always
     image: mariadb
     command: --max-allowed-packet=64MB
-    restart: always
     volumes:
       - aphroconfuso.mt-v1-matomo-data:/var/lib/mysql
     environment:
@@ -199,9 +206,9 @@ services:
 
   strapi:
     container_name: strapi
+    restart: always
     build: ./aphroconfuso.mt-strapi/
     image: mystrapi:latest
-    restart: unless-stopped
     environment:
       DATABASE_CLIENT: ${STRAPI_CLIENT}
       DATABASE_HOST: postgresstrapi
@@ -231,7 +238,7 @@ services:
 
   postgresstrapi:
     container_name: postgresstrapi
-    restart: unless-stopped
+    restart: always
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${STRAPI_DB_USERNAME}
