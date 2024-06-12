@@ -66,22 +66,6 @@ services:
       - "traefik.http.middlewares.cors-mt.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.cors-mt.headers.addvaryheader=true"
 
-  eleventy:
-    container_name: aphroconfuso.mt-eleventy
-    restart: always
-    build:
-      context: ./aphroconfuso.mt-eleventy
-    volumes:
-      - ./aphroconfuso.mt-eleventy:/usr/src/app
-      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/src/app/aphroconfuso.mt
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.eleventy.rule=Host(`eleventy.aphroconfuso.mt`)"
-      - "traefik.http.routers.eleventy.entrypoints=websecure"
-      - "traefik.http.routers.eleventy.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-      - "traefik.http.routers.eleventy.middlewares=test-auth"
-
   proviaphroconfusomt:
     container_name: proviaphroconfusomt
     restart: always
@@ -94,23 +78,23 @@ services:
       - "traefik.http.routers.provi.rule=Host(`provi.aphroconfuso.mt`)"
       - "traefik.http.routers.provi.entrypoints=websecure"
       - "traefik.http.routers.provi.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-      - "traefik.http.routers.provi.middlewares=test-auth"
+      # - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
+      # - "traefik.http.routers.provi.middlewares=test-auth"
 
-  edituriaphroconfusomt:
-    container_name: edituriaphroconfusomt
-    restart: always
-    build:
-      context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
-    volumes:
-      - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/share/nginx/html
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.edituri.rule=Host(`edituri.aphroconfuso.mt`)"
-      - "traefik.http.routers.edituri.entrypoints=websecure"
-      - "traefik.http.routers.edituri.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-      - "traefik.http.routers.edituri.middlewares=test-auth"
+  # edituriaphroconfusomt:
+  #   container_name: edituriaphroconfusomt
+  #   restart: always
+  #   build:
+  #     context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
+  #   volumes:
+  #     - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/share/nginx/html
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.edituri.rule=Host(`edituri.aphroconfuso.mt`)"
+  #     - "traefik.http.routers.edituri.entrypoints=websecure"
+  #     - "traefik.http.routers.edituri.tls.certresolver=myresolver"
+  #     - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
+  #     - "traefik.http.routers.edituri.middlewares=test-auth"
 
   stampiaphroconfusomt:
     container_name: stampiaphroconfusomt
