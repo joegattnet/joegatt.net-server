@@ -40,7 +40,7 @@ echo " "
 
 echo "Backing up Strapi db..."
 export PGPASSWORD=$STRAPI_DB_PASSWORD
-docker exec  -e PGPASSWORD=$STRAPI_DB_PASSWORD postgresstrapi /usr/bin/pg_dump -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
+docker exec -e PGPASSWORD=$STRAPI_DB_PASSWORD postgresstrapi /usr/bin/pg_dump -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
 #docker exec -i postgresstrapi /usr/bin/pg_dump -p 5437 -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --yes --quiet postgres-strapi-backup.sql.gz
 FILESIZE=$(stat -c%s "postgres-strapi-backup.sql.gz")
