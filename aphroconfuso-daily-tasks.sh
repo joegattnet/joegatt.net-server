@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Running backups..."
 
 # Add to crontab
@@ -6,14 +8,25 @@ echo "Running backups..."
 # 0 5 * * * ~/aphroconfuso-daily-tasks.sh
 
 # Import variables
-eval "$(
-  cat .env | awk '!/^\s*#/' | awk '!/^\s*$/' | while IFS='' read -r line; do
-    key=$(echo "$line" | cut -d '=' -f 1)
-    value=$(echo "$line" | cut -d '=' -f 2-)
-    echo "export $key=\"$value\""
-  done
-)"
+# eval "$(
+#   cat .env | awk '!/^\s*#/' | awk '!/^\s*$/' | while IFS='' read -r line; do
+#     key=$(echo "$line" | cut -d '=' -f 1)
+#     value=$(echo "$line" | cut -d '=' -f 2-)
+#     echo "export $key=\"$value\""
+#   done
+# )"
 
+source .env
+echo "Imported variables:"
+echo "LISTMONK_USER $LISTMONK_USER"
+echo "LISTMONK_DB $LISTMONK_DB"
+echo "STRAPI_DB_USERNAME $STRAPI_DB_USERNAME"
+echo "STRAPI_DB $STRAPI_DB"
+echo "GPG_PASSPHRASE $GPG_PASSPHRASE"
+echo "MYSQL_ROOT_PASSWORD $MYSQL_ROOT_PASSWORD"
+echo "MYSQL_DATABASE $MYSQL_DATABASE"
+
+exit
 cd aphroconfuso.mt-backups
 
 # Delete existing files
