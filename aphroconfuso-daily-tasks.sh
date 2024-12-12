@@ -33,17 +33,24 @@ rm *-backup.sql.gz.gpg
 echo "Backing up Listmonk db..."
 docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER -d $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --yes --quiet postgres-listmonk-backup.sql.gz
+FILESIZE=$(stat -c%s "postgres-listmonk-backup.sql.gz")
+echo "Backup size: $FILESIZE bytes"
+echo " "
 
 echo "Backing up Strapi db..."
 export PGPASSWORD=$STRAPI_DB_PASSWORD
-docker exec -it postgresstrapi sh -c '/usr/bin/pg_dump -p 5437 -U $STRAPI_DB_USERNAME -d $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz'
+docker exec -it postgresstrapi /usr/bin/pg_dumpall -p 5437 -U $STRAPI_DB_USERNAME -d $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --yes --quiet postgres-strapi-backup.sql.gz
 FILESIZE=$(stat -c%s "postgres-strapi-backup.sql.gz")
 echo "Backup size: $FILESIZE bytes"
+echo " "
 
 echo "Backing up Matomo db..."
 docker exec mariadbmatomo /usr/bin/mysqldump -u root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE | gzip -9 > postgres-matomo-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --yes --quiet postgres-matomo-backup.sql.gz
+FILESIZE=$(stat -c%s "postgres-matomo-backup.sql.gz")
+echo "Backup size: $FILESIZE bytes"
+echo " "
 
 # Delete plaintext files
 rm *-backup.sql.gz
