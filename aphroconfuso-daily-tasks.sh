@@ -26,7 +26,6 @@ echo "GPG_PASSPHRASE $GPG_PASSPHRASE"
 echo "MYSQL_ROOT_PASSWORD $MYSQL_ROOT_PASSWORD"
 echo "MYSQL_DATABASE $MYSQL_DATABASE"
 
-exit
 cd aphroconfuso.mt-backups
 
 # Delete existing files
