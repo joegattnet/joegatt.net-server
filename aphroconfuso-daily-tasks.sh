@@ -32,11 +32,11 @@ cd aphroconfuso.mt-backups
 rm *-backup.sql.gz.gpg
 
 # Backup databases
-docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
+docker exec -i postgreslistmonk /usr/bin/pg_dump -p 9433 -U $LISTMONK_USER -d $LISTMONK_DB | gzip -9 > postgres-listmonk-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --yes --quiet postgres-listmonk-backup.sql.gz
 
 export PGPASSWORD=$STRAPI_DB_PASSWORD
-docker exec -i postgresstrapi /usr/bin/pg_dump -p 5437 -U $STRAPI_DB_USERNAME $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
+docker exec -i postgresstrapi /usr/bin/pg_dump -p 5437 -U $STRAPI_DB_USERNAME -d $STRAPI_DB | gzip -9 > postgres-strapi-backup.sql.gz
 gpg -c --passphrase $GPG_PASSPHRASE --batch --yes --quiet postgres-strapi-backup.sql.gz
 
 docker exec mariadbmatomo /usr/bin/mysqldump -u root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE | gzip -9 > postgres-matomo-backup.sql.gz
