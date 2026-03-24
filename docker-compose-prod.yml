@@ -222,6 +222,7 @@ services:
     container_name: odoo-db
     image: postgres:15
     restart: always
+    command: ["postgres", "-c", "config_file=/var/lib/postgresql/data/pgdata/postgresql.auto.conf"]
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: odoo
