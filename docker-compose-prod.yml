@@ -258,7 +258,6 @@ services:
       - "traefik.http.routers.odoo.rule=Host(`odoo.aphroconfuso.mt`)"
       - "traefik.http.routers.odoo.entrypoints=websecure"
       - "traefik.http.routers.odoo.tls.certresolver=myresolver"
-    user: "101:101"
     networks:
       - joegattnet-server_default
 volumes:
