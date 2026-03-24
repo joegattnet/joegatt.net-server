@@ -218,7 +218,7 @@ services:
     ports:
       - "5437:5437"
 
-   aphroconfuso.mt-v1-odoo-web:
+  aphroconfuso.mt-v1-odoo-web:
     image: odoo:latest
     depends_on:
       - postgresodoo
@@ -258,6 +258,7 @@ volumes:
   aphroconfuso.mt-v1-postgresstrapi-data:
   aphroconfuso.mt-v1-odoo-web-data:
   aphroconfuso.mt-v1-odoo-db-data:
+
 secrets:
   postgresql_password:
     file: odoo_pg_pass
