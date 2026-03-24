@@ -239,6 +239,7 @@ services:
     image: odoo:18.0
     depends_on:
       - db
+    command: ["odoo", "-c", "/etc/odoo/odoo.conf"]
     restart: always
     ports:
       - "8049:8069"
