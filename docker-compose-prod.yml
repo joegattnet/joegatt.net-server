@@ -78,23 +78,6 @@ services:
       - "traefik.http.routers.provi.rule=Host(`provi.aphroconfuso.mt`)"
       - "traefik.http.routers.provi.entrypoints=websecure"
       - "traefik.http.routers.provi.tls.certresolver=myresolver"
-      # - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-      # - "traefik.http.routers.provi.middlewares=test-auth"
-
-  # edituriaphroconfusomt:
-  #   container_name: edituriaphroconfusomt
-  #   restart: always
-  #   build:
-  #     context: ./aphroconfuso.mt-eleventy/aphroconfuso.mt
-  #   volumes:
-  #     - ./aphroconfuso.mt-eleventy/aphroconfuso.mt/site:/usr/share/nginx/html
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.edituri.rule=Host(`edituri.aphroconfuso.mt`)"
-  #     - "traefik.http.routers.edituri.entrypoints=websecure"
-  #     - "traefik.http.routers.edituri.tls.certresolver=myresolver"
-  #     - "traefik.http.middlewares.test-auth.basicauth.users=aphroconfuso:$$2y$$05$$FzP975bQ/zWlmZraENHtK.64V6I0GmyeL7096ytqEA./EHiT6RdiC"
-  #     - "traefik.http.routers.edituri.middlewares=test-auth"
 
   stampiaphroconfusomt:
     container_name: stampiaphroconfusomt
@@ -188,6 +171,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
+# FIXME Strapi volume misnomer
   strapi:
     container_name: strapi
     restart: always
@@ -234,7 +218,46 @@ services:
     ports:
       - "5437:5437"
 
+   aphroconfuso.mt-v1-odoo-web:
+    image: odoo:latest
+    depends_on:
+      - postgresodoo
+    restart: always
+    ports:
+      - "8069:8069"
+      - "8072:8072"
+    volumes:
+      - aphroconfuso.mt-v1-odoo-web-data:/var/lib/odoo
+      - ./aphroconfuso.mt-config/odoo/config:/etc/odoo
+      - ./aphroconfuso.mt-config/odoo/addons:/mnt/extra-addons
+    environment:
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+    secrets:
+      - postgresql_password
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.matomo.rule=Host(`odoo.aphroconfuso.mt`)"
+      - "traefik.http.routers.matomo.entrypoints=websecure"
+      - "traefik.http.routers.matomo.tls.certresolver=myresolver"
+  postgresodoo:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    restart: always
+    volumes:
+      - aphroconfuso.mt-v1-odoo-db-data:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql_password
+
 volumes:
   aphroconfuso.mt-v1-listmonk-data:
   aphroconfuso.mt-v1-matomo-data:
   aphroconfuso.mt-v1-postgresstrapi-data:
+  aphroconfuso.mt-v1-odoo-web-data:
+  aphroconfuso.mt-v1-odoo-db-data:
+secrets:
+  postgresql_password:
+    file: odoo_pg_pass
