@@ -239,7 +239,7 @@ services:
       - "traefik.http.routers.matomo.rule=Host(`odoo.aphroconfuso.mt`)"
       - "traefik.http.routers.matomo.entrypoints=websecure"
       - "traefik.http.routers.matomo.tls.certresolver=myresolver"
-  postgresodoo:
+  db:
     image: postgres:latest
     environment:
       - POSTGRES_DB=postgres
