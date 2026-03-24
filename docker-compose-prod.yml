@@ -236,9 +236,9 @@ services:
       - postgresql_password
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.matomo.rule=Host(`odoo.aphroconfuso.mt`)"
-      - "traefik.http.routers.matomo.entrypoints=websecure"
-      - "traefik.http.routers.matomo.tls.certresolver=myresolver"
+      - "traefik.http.routers.odoo.rule=Host(`odoo.aphroconfuso.mt`)"
+      - "traefik.http.routers.odoo.entrypoints=websecure"
+      - "traefik.http.routers.odoo.tls.certresolver=myresolver"
   db:
     image: postgres:latest
     environment:
