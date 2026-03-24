@@ -225,7 +225,7 @@ services:
     restart: always
     ports:
       - "8069:8069"
-      - "8072:8072"
+      - "8055:8072"
     volumes:
       - aphroconfuso.mt-v1-odoo-web-data:/var/lib/odoo
       - ./aphroconfuso.mt-config/odoo/config:/etc/odoo
