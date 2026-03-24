@@ -219,7 +219,7 @@ services:
       - "5437:5437"
 
   odoo:
-    image: odoo:latest
+    image: odoo:18.0-20240115
     depends_on:
       - db
     restart: always
@@ -240,7 +240,7 @@ services:
       - "traefik.http.routers.odoo.entrypoints=websecure"
       - "traefik.http.routers.odoo.tls.certresolver=myresolver"
   db:
-    image: postgres:latest
+    image: postgres:15
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
