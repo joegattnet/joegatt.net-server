@@ -219,7 +219,7 @@ services:
       - "5437:5437"
 
   odoo:
-    image: odoo:18.0-20240115
+    image: odoo:18.0
     depends_on:
       - db
     restart: always
