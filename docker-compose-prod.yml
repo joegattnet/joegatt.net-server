@@ -218,7 +218,24 @@ services:
     ports:
       - "5437:5437"
 
+  db:
+    container_name: odoo-db
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - aphroconfuso.mt-v1-odoo-db-data:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql_password
+    networks:
+      - joegattnet-server_default
+
   odoo:
+    container_name: odoo
     image: odoo:18.0
     depends_on:
       - db
@@ -230,8 +247,9 @@ services:
       - aphroconfuso.mt-v1-odoo-web-data:/var/lib/odoo
       - ./aphroconfuso.mt-config/odoo/config:/etc/odoo
       - ./aphroconfuso.mt-config/odoo/addons:/mnt/extra-addons
+      - ./oca-addons:/mnt/oca-addons
     environment:
-      - PASSWORD_FILE=/run/secrets/postgresql_password
+      PASSWORD_FILE: /run/secrets/postgresql_password
     secrets:
       - postgresql_password
     labels:
@@ -239,19 +257,9 @@ services:
       - "traefik.http.routers.odoo.rule=Host(`odoo.aphroconfuso.mt`)"
       - "traefik.http.routers.odoo.entrypoints=websecure"
       - "traefik.http.routers.odoo.tls.certresolver=myresolver"
-  db:
-    image: postgres:15
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
-      - POSTGRES_USER=odoo
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    restart: always
-    volumes:
-      - aphroconfuso.mt-v1-odoo-db-data:/var/lib/postgresql/data/pgdata
-    secrets:
-      - postgresql_password
-
+    user: "101:101"
+    networks:
+      - joegattnet-server_default
 volumes:
   aphroconfuso.mt-v1-listmonk-data:
   aphroconfuso.mt-v1-matomo-data:
