@@ -270,3 +270,7 @@ volumes:
 secrets:
   postgresql_password:
     file: odoo_pg_pass
+
+networks:
+  joegattnet-server_default:
+    external: true
